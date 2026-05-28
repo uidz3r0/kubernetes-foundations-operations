@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: demo-app
+  namespace: integration-lab
+
+spec:
+  replicas: 2
+
+  selector:
+    matchLabels:
+      app: demo
+
+  template:
+    metadata:
+      labels:
+        app: demo
+
+    spec:
+      containers:
+      - name: web
+        image: nginx
+
+        env:
+        - name: APP_COLOUR
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: APP_COLOR
+
+        - name: APP_MODE
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: APP_MODE
+
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: app-secret
+              key: username
+
+        - name: DB_PASS
+          valueFrom:
+            secretKeyRef:
+              name: app-secret
+              key: password
