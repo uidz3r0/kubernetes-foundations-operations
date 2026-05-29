@@ -65,7 +65,7 @@ Transition from operational familiarity into exam-level speed and confidence.
 
 * `[ ]` not started
 * `[-]` in progress / partial understanding
-* `[*]` completed confidently
+* `[x]` completed confidently
 
 A topic is considered complete when it can be:
 
@@ -81,17 +81,17 @@ You are here.
 
 ## Core Objects
 
-* [*] Setup kind
-* [*] kubectl basics
-* [*] Pods
-* [*] Deployments
-* [*] ReplicaSets
-* [*] Namespaces
-* [*] Labels / Selectors
-* [*] Services
-* [*] ConfigMaps
-* [*] Secrets
-* [*] Foundation Lab
+* [x] Setup kind
+* [x] kubectl basics
+* [x] Pods
+* [x] Deployments
+* [x] ReplicaSets
+* [x] Namespaces
+* [x] Labels / Selectors
+* [x] Services
+* [x] ConfigMaps
+* [x] Secrets
+* [x] Foundation Lab
 
 ## Goal
 
@@ -185,8 +185,8 @@ Understand Kubernetes core objects and the desired-state model.
 ## Storage
 
 * [ ] Volumes
-* [ ] Persistent Volumes
-* [ ] Persistent Volume Claims
+* [X] Persistent Volumes
+* [X] Persistent Volume Claims
 * [ ] StatefulSets basics
 
 ## Goal
