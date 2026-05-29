@@ -2,9 +2,9 @@
 
 ## Environment Setup
 
-* [ ] Create folder structure
-* [ ] Create `yaml/` directory
-* [ ] Create namespace `w2d1`
+* [x] Create folder structure
+* [x] Create `yaml/` directory
+* [x] Create namespace `w2d1`
 
 ---
 
@@ -12,30 +12,30 @@
 
 ## Pod Networking
 
-* [ ] Create nginx Pod
-* [ ] Verify Pod is running
-* [ ] Enter Pod using `kubectl exec`
-* [ ] Test localhost connectivity
+* [x] Create nginx Pod
+* [x] Verify Pod is running
+* [x] Enter Pod using `kubectl exec`
+* [x] Test localhost connectivity
 
 ---
 
 ## ClusterIP Service
 
-* [ ] Create ClusterIP Service
-* [ ] Verify Service exists
-* [ ] Create temporary busybox client Pod
-* [ ] Test connectivity to Service
-* [ ] Verify Service resolves internally
+* [x] Create ClusterIP Service
+* [x] Verify Service exists
+* [x] Create temporary busybox client Pod
+* [x] Test connectivity to Service
+* [x] Verify Service resolves internally
 
 ---
 
 ## NodePort Service
 
-* [ ] Create NodePort Service
-* [ ] Verify NodePort assigned
-* [ ] Get node IP
-* [ ] Access application using browser or curl
-* [ ] Verify external access works
+* [x] Create NodePort Service
+* [x] Verify NodePort assigned
+* [x] Get node IP
+* [x] Access application using browser or curl
+* [x] Verify external access works
 
 ---
 
@@ -43,33 +43,33 @@
 
 ## PersistentVolume
 
-* [ ] Create PersistentVolume
-* [ ] Verify PV status
+* [x] Create PersistentVolume
+* [x] Verify PV status
 
 ---
 
 ## PersistentVolumeClaim
 
-* [ ] Create PVC
-* [ ] Verify PVC is Bound
+* [x] Create PVC
+* [x] Verify PVC is Bound
 
 ---
 
 ## Pod with Storage
 
-* [ ] Create Pod using PVC
-* [ ] Verify Pod is running
-* [ ] Write file into mounted storage
-* [ ] Delete Pod
-* [ ] Recreate Pod
-* [ ] Verify file still exists
+* [x] Create Pod using PVC
+* [x] Verify Pod is running
+* [x] Write file into mounted storage
+* [x] Delete Pod
+* [x] Recreate Pod
+* [x] Verify file still exists
 
 ---
 
 # Cleanup
 
-* [ ] Delete namespace
-* [ ] Delete PV
+* [x] Delete namespace
+* [x] Delete PV
 
 ---
 
