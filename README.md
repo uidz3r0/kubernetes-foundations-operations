@@ -91,7 +91,7 @@ You are here.
 * [*] Services
 * [*] ConfigMaps
 * [*] Secrets
-* [ ] Foundation Lab
+* [*] Foundation Lab
 
 ## Goal
 

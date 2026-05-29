@@ -374,6 +374,52 @@ kubectl exec -it -n w2d1 storage-pod -- sh
 cat /data/test.txt
 ```
 
+### The Binding Phase - Chain of Custody
+
+$$\text{Pod} \longrightarrow \text{PVC} \longrightarrow \text{PV} \longrightarrow \text{Physical Storage (/tmp/k8s-data)}$$
+
+Here is how those specific YAML files shake hands behind the scenes:
+
+1. The Pod looks at the PVC
+
+  Inside "pod-storage.yaml", your Pod says: "I want a volume named storage-volume, and I want to back it with a claim named local-pvc." * The Link: claimName: local-pvc matches the metadata.name: local-pvc inside your pvc.yaml.
+
+2. The PVC looks for a matching PV (The Magic Step)
+
+  When you run kubectl apply -f pvc.yaml, the Kubernetes control plane looks at the requirements inside your claim:
+
+    - It needs ReadWriteOnce access.
+    - It needs at least 500Mi of space.
+
+  Kubernetes then scans the cluster's available PersistentVolumes to find a match. It looks at your pv.yaml and says: "Aha! local-pv has ReadWriteOnce and offers 1Gi (which is plenty for a 500Mi request). I will Bind them together."
+
+  Once bound, that PV belongs exclusively to that PVC. No other claim can steal it.
+
+3. The PV points to the Real World
+ 
+  Your pv.yaml has a property called hostPath.path: /tmp/k8s-data. This is the literal directory on your worker node's physical hard drive.
+
+  How to see this relationship in the terminal
+
+  If you want to prove to yourself that they are connected, run these two diagnostic commands:
+
+   1. Check the PVC Status
+   
+```bash
+kubectl get pvc local-pvc -n w2d1
+```
+
+  What to look for: Under the VOLUME column, you will see it explicitly print local-pv. Under STATUS, it will say Bound.
+
+   2. Check the PV Status
+```bash
+kubectl get pv local-pv
+```
+
+  What to look for: Under the CLAIM column, you will see it explicitly print w2d1/local-pvc, proving that the cluster-level volume has successfully locked eyes with your namespace-scoped claim.
+
+  The node running the cluster will have this physical file /tmp/k8s-data/test.txt
+
 ---
 
 # Cleanup
@@ -385,15 +431,35 @@ kubectl delete pv local-pv
 
 ---
 
-# Questions
+# Questions W2D1
 
 1. What is the difference between a Pod and a Service?
+    - A Pod is the smallest deployable unit running your container application, while a Service provides a stable network endpoint to load balance traffic across a group of matching Pods.
+
 2. Why is a Service needed if Pods already have IP addresses?
+    - Because Pods are ephemeral and their IP addresses change whenever they are recreated. A Service provides a permanent, stable IP address that abstracts those shifting Pod IPs so other applications don't lose connection.
+
 3. What does ClusterIP expose?
+    - ClusterIP exposes the Service on an internal cluster IP, allowing access to the selected Pods from "inside" the cluster only.
+
 4. What does NodePort expose?
+    - NodePort exposes the Service on a port on every node, so traffic from outside the cluster can reach the Pods via nodeIP:nodePort.
+
 5. What is a selector in a Service?
+    - A selector in a Service matches the labels of Pods. It allows the Service to automatically discover and route traffic to Pods with matching metadata labels.
+
 6. What happens if labels do not match selectors?
+    - The Service will still exist, but its Endpoints list will be empty. As a result, any traffic hitting the Service will have nowhere to go and will drop or timeout because no Pods match the criteria.
+  
 7. What is a PersistentVolume (PV)?
+    - A PersistentVolume (PV) is cluster-level storage resource provided by the Kubernetes cluster. It exists independently of Pods and can persist data beyond the lifecycle of a Pod.
+    - A PV can be implemented using local disks, EBS, NFS, EFS or other storage systems.
+
 8. What is a PersistentVolumeClaim (PVC)?
-9. What happens to data after a Pod is deleted without persistent storage?
+    - A PVC is a namespace-scoped request for storage that binds to a PV; Pods use the PVC to mount storage.
+
+9.  What happens to data after a Pod is deleted without persistent storage?
+    - Without persistent storage, Pod data is ephemeral and is lost when the Pod is deleted. The data lasts only for the Pod’s lifecycle.
+
 10. Why did the file still exist after recreating the Pod?
+    - The file still exists because it was saved to a durable PersistentVolume (PV). When the new Pod was recreated, it claimed the same PersistentVolumeClaim (PVC), reconnecting it to that persistent storage. The Pod mounts the PVC, which is bound to the PV.
