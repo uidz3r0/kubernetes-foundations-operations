@@ -320,7 +320,7 @@ AWS EFS
 6. Why did the file remain after deleting the Pod?
    - The the file remained because it was saved on durable persistent storage.
 7. What does ReadWriteOnce mean?
-   - means the volume can be mounted read-write by one node at a time, not necessarily just one container.
+   - ReadWriteOnce (RWO) means a volume can be mounted as read-write by a single node at a time, not necessarily just one Pod or one container. Multiple Pods on that node may still access the volume. AWS EBS is a common example of RWO storage.
 8. What does the Retain reclaim policy do?
    - Retain means Kubernetes keeps the PV and its data after the PVC is deleted; it does not automatically delete the underlying storage.
 9. Why is persistent storage important for databases?
@@ -337,4 +337,3 @@ AWS EFS
     - The PVC will remain stuck in a Pending state because it cannot find an available PV large enough to satisfy the request. Consequently, the Pod will be stuck in a Pending or ContainerCreating state because its required volume cannot be bound.
 15. What Kubernetes object connects a Pod to storage?
     - a PVC, not a PV.
-

@@ -64,7 +64,7 @@ Transition from operational familiarity into exam-level speed and confidence.
 # Progress Legend
 
 * `[ ]` not started
-* `[-]` in progress / partial understanding
+* `[⏳]` in progress / partial understanding
 * `[x]` completed confidently
 
 A topic is considered complete when it can be:
@@ -176,22 +176,163 @@ Understand Kubernetes core objects and the desired-state model.
 
 ## Networking
 
-* [ ] ClusterIP
-* [ ] NodePort
+### Services
+
+* [x] ClusterIP
+* [x] NodePort
 * [ ] LoadBalancer
 * [ ] Ingress
+
+### DNS
+
 * [ ] CoreDNS
+
+---
 
 ## Storage
 
-* [ ] Volumes
-* [X] Persistent Volumes
-* [X] Persistent Volume Claims
-* [ ] StatefulSets basics
+### Basic Volumes
+
+* [x] Volumes
+* [x] Volume types
+* [x] emptyDir
+* [X] hostPath
+* [x] volumeMounts
+
+### Persistent Storage
+
+* [x] Persistent Volumes (PV)
+* [x] Persistent Volume Claims (PVC)
+
+### Stateful Workloads
+
+* [x] StatefulSets Basics
+* [ ] volumeClaimTemplates (StatefulSet Storage)
+
+### Advanced Storage
+
+* [ ] Dynamic Provisioning
+* [ ] StorageClasses
+
+---
+
+## Week 2 Daily Breakdown
+
+```
+W2D1 PV / PVC
+W2D2 Storage Concepts
+W2D3 StatefulSets
+W2D4 Volumes
+W2D5 StatefulSet Storage
+W2D6 StorageClasses
+W2D7 Network Exposure + DNS
+```
+
+### W2D1 — Persistent Volumes & Persistent Volume Claims
+
+**Topics**
+
+* Persistent Volumes (PV)
+* Persistent Volume Claims (PVC)
+* Pod storage mounting
+
+**Files**
+
+* `pv.yaml`
+* `pvc.yaml`
+* `pod-storage.yaml`
+
+**Status:** ✅ Complete
+
+---
+
+### W2D2 — PV/PVC Practice
+
+**Topics**
+
+* Storage persistence
+* Data verification
+* PV/PVC lifecycle
+
+**Files**
+
+* `pv.yaml`
+* `pvc.yaml`
+* `pod.yaml`
+
+**Status:** ✅ Complete
+
+---
+
+### W2D3 — StatefulSets Basics
+
+**Topics**
+
+* StatefulSets
+* Stable Pod identity
+* Headless Services
+
+**Files**
+
+* `nginx-statefulset.yaml`
+* `headless-service.yaml`
+
+**Status:** ✅ Complete
+
+---
+
+### W2D4 — Kubernetes Volumes
+
+**Topics**
+
+* Volumes
+* volumeMounts
+* emptyDir
+* hostPath
+
+**Files**
+
+* `emptydir-pod.yaml`
+* `hostpath-pod.yaml`
+
+**Status:** ✅ Planned
+
+---
+
+### W2D5 — StatefulSet Storage
+
+**Topics**
+
+* volumeClaimTemplates
+* Per-Pod persistent storage
+* StatefulSet persistence
+
+**Files**
+
+* `statefulset-pvc.yaml`
+
+**Status:** ⏳ Planned
+
+---
 
 ## Goal
 
-Understand Kubernetes traffic flow and persistence.
+### Understand
+
+* How Pods communicate inside a cluster
+* How Kubernetes Services expose applications
+* How DNS resolution works inside Kubernetes
+* How storage persists beyond Pod lifecycles
+* How Stateful applications manage persistent data
+
+### By the End of Week 2 You Should Be Able To
+
+* Expose applications using Services
+* Troubleshoot Service networking
+* Mount temporary and persistent storage
+* Create and use PVs and PVCs
+* Deploy StatefulSets with persistent storage
+* Understand the foundation of StorageClasses and dynamic provisioning
 
 ---
 
