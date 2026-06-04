@@ -180,12 +180,12 @@ Understand Kubernetes core objects and the desired-state model.
 
 * [x] ClusterIP
 * [x] NodePort
-* [ ] LoadBalancer
-* [ ] Ingress
+* [x] LoadBalancer
+* [x] Ingress
 
 ### DNS
 
-* [ ] CoreDNS
+* [x] CoreDNS
 
 ---
 
@@ -207,12 +207,12 @@ Understand Kubernetes core objects and the desired-state model.
 ### Stateful Workloads
 
 * [x] StatefulSets Basics
-* [ ] volumeClaimTemplates (StatefulSet Storage)
+* [x] volumeClaimTemplates (StatefulSet Storage)
 
 ### Advanced Storage
 
-* [ ] Dynamic Provisioning
-* [ ] StorageClasses
+* [x] Dynamic Provisioning
+* [x] StorageClasses
 
 ---
 
@@ -369,7 +369,9 @@ Understand how workloads are placed, controlled, and scaled.
 * [ ] ImagePullBackOff
 * [ ] Pending Pods
 * [ ] Resource exhaustion
-* [ ] Debugging techniques
+* [ ] Debugging techniques 
+* [ ] kubectl debug
+* [ ] Ephemeral debug containers
 
 ## Goal
 
@@ -384,6 +386,7 @@ Build a break/fix operational mindset.
 * [ ] Helm
 * [ ] RBAC
 * [ ] Service Accounts
+* [ ] Gateway API
 * [ ] GitOps concepts
 * [ ] CI/CD into Kubernetes
 * [ ] Prometheus / Grafana basics
@@ -406,6 +409,7 @@ Begin thinking like a platform engineer rather than only a workload operator.
 * [ ] Security Contexts
 * [ ] Admission Controllers (high level)
 * [ ] Image security concepts
+* [ ] External Secrets Operator (awareness)
 
 ## Goal
 
@@ -426,6 +430,7 @@ Understand Kubernetes security boundaries and workload hardening basics.
 * [ ] etcd concepts
 * [ ] Certificate management
 * [ ] kubelet behavior
+* [ ] Control Plane Components
 
 ## Goal
 
