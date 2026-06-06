@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: ds-storage
+
+spec:
+  selector:
+    matchLabels:
+      app: ds-storage
+
+  template:
+    metadata:
+      labels:
+        app: ds-storage
+
+    spec:
+      nodeSelector:
+        storage: "true"
+
+      containers:
+      - name: nginx
+        image: nginx:alpine

@@ -224,6 +224,21 @@ Delete cluster if needed:
 
 ```bash
 kind delete cluster --name learning
+
+kind create cluster --name phase1 --config yaml/kind-config.yaml
+kubectl config get-contexts
+kubectl get nodes
+
+kubectl create namespace week1
+kubectl config set-context --current --namespace=week1
+kubectl config view --minify | grep namespace
+```
+
+The week1 cluster creates a default Kind cluster that contains:
+
+```
+1 Control Plane
+0 Workers
 ```
 
 Useful Docker checks:

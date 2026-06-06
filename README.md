@@ -178,14 +178,26 @@ Understand Kubernetes core objects and the desired-state model.
 
 ### Services
 
-* [x] ClusterIP
-* [x] NodePort
-* [x] LoadBalancer
-* [x] Ingress
+- [x] ClusterIP
+- [x] NodePort
+- [x] LoadBalancer (Concepts)
+- [x] Ingress (Concepts)
+
+### Service Discovery
+
+- [x] DNS-based Service Discovery
+- [x] Service Names
+- [x] Service Selectors
 
 ### DNS
 
-* [x] CoreDNS
+- [x] CoreDNS
+- [x] DNS Search Paths
+- [x] Service Resolution
+
+### Modern Kubernetes Networking
+
+- [x] Gateway API (Awareness)
 
 ---
 
@@ -193,72 +205,84 @@ Understand Kubernetes core objects and the desired-state model.
 
 ### Basic Volumes
 
-* [x] Volumes
-* [x] Volume types
-* [x] emptyDir
-* [X] hostPath
-* [x] volumeMounts
+- [x] Volumes
+- [x] volumeMounts
+- [x] emptyDir
+- [x] hostPath
 
 ### Persistent Storage
 
-* [x] Persistent Volumes (PV)
-* [x] Persistent Volume Claims (PVC)
+- [x] Persistent Volumes (PV)
+- [x] Persistent Volume Claims (PVC)
 
 ### Stateful Workloads
 
-* [x] StatefulSets Basics
-* [x] volumeClaimTemplates (StatefulSet Storage)
+- [x] StatefulSets Basics
+- [x] Headless Services
+- [x] volumeClaimTemplates
 
 ### Advanced Storage
 
-* [x] Dynamic Provisioning
-* [x] StorageClasses
+- [x] Dynamic Provisioning
+- [x] StorageClasses
 
 ---
 
 ## Week 2 Daily Breakdown
 
-```
-W2D1 PV / PVC
-W2D2 Storage Concepts
-W2D3 StatefulSets
-W2D4 Volumes
-W2D5 StatefulSet Storage
-W2D6 StorageClasses
-W2D7 Network Exposure + DNS
-```
+**W2D1** — Services + Basic Storage
 
-### W2D1 — Persistent Volumes & Persistent Volume Claims
+**W2D2** — Persistent Volumes & Claims
 
-**Topics**
+**W2D3** — StatefulSets & Headless Services
 
-* Persistent Volumes (PV)
-* Persistent Volume Claims (PVC)
-* Pod storage mounting
+**W2D4** — Volumes (emptyDir, hostPath)
 
-**Files**
+**W2D5** — StatefulSet Storage (volumeClaimTemplates)
 
-* `pv.yaml`
-* `pvc.yaml`
-* `pod-storage.yaml`
+**W2D6** — StorageClasses & Dynamic Provisioning
+
+**W2D7** — Ingress, CoreDNS & Service Discovery
+
+---
+
+### W2D1 — Services + Basic Storage
+
+#### Topics
+
+- ClusterIP
+- NodePort
+- Service selectors
+- PV
+- PVC
+- Pod storage mounting
+
+#### Files
+
+- `service-clusterip.yaml`
+- `service-nodeport.yaml`
+- `pv.yaml`
+- `pvc.yaml`
+- `pod-storage.yaml`
 
 **Status:** ✅ Complete
 
 ---
 
-### W2D2 — PV/PVC Practice
+### W2D2 — Persistent Volumes & Claims
 
-**Topics**
+#### Topics
 
-* Storage persistence
-* Data verification
-* PV/PVC lifecycle
+- Storage persistence
+- Data verification
+- PV lifecycle
+- PVC lifecycle
 
-**Files**
+#### Files
 
-* `pv.yaml`
-* `pvc.yaml`
-* `pod.yaml`
+- `pv.yaml`
+- `pvc.yaml`
+- `pod.yaml`
 
 **Status:** ✅ Complete
 
@@ -266,16 +290,17 @@ W2D7 Network Exposure + DNS
 
 ### W2D3 — StatefulSets Basics
 
-**Topics**
+#### Topics
 
-* StatefulSets
-* Stable Pod identity
-* Headless Services
+- StatefulSets
+- Stable Pod identity
+- Ordered deployment
+- Headless Services
 
-**Files**
+#### Files
 
-* `nginx-statefulset.yaml`
-* `headless-service.yaml`
+- `nginx-statefulset.yaml`
+- `headless-service.yaml`
 
 **Status:** ✅ Complete
 
@@ -283,35 +308,73 @@ W2D7 Network Exposure + DNS
 
 ### W2D4 — Kubernetes Volumes
 
-**Topics**
+#### Topics
 
-* Volumes
-* volumeMounts
-* emptyDir
-* hostPath
+- Volumes
+- volumeMounts
+- emptyDir
+- hostPath
 
-**Files**
+#### Files
 
-* `emptydir-pod.yaml`
-* `hostpath-pod.yaml`
+- `emptydir-pod.yaml`
+- `hostpath-pod.yaml`
 
-**Status:** ✅ Planned
+**Status:** ✅ Complete
 
 ---
 
 ### W2D5 — StatefulSet Storage
 
-**Topics**
+#### Topics
 
-* volumeClaimTemplates
-* Per-Pod persistent storage
-* StatefulSet persistence
+- volumeClaimTemplates
+- Per-Pod storage
+- Stateful workload persistence
 
-**Files**
+#### Files
 
-* `statefulset-pvc.yaml`
+- `statefulset-pvc.yaml`
 
-**Status:** ⏳ Planned
+**Status:** ✅ Complete
+
+---
+
+### W2D6 — StorageClasses & Dynamic Provisioning
+
+#### Topics
+
+- StorageClasses
+- Dynamic provisioning
+- Automatic PVC fulfillment
+
+#### Files
+
+- `storageclass.yaml`
+- `pvc-dynamic.yaml`
+
+**Status:** ✅ Complete
+
+---
+
+### W2D7 — Ingress, CoreDNS & Service Discovery
+
+#### Topics
+
+- Ingress resources
+- Service Discovery
+- CoreDNS
+- DNS search domains
+- Service resolution
+- Gateway API awareness
+
+#### Files
+
+- `nginx-deployment.yaml`
+- `nginx-service.yaml`
+- `ingress.yaml`
+
+**Status:** ✅ Complete
 
 ---
 
@@ -319,34 +382,71 @@ W2D7 Network Exposure + DNS
 
 ### Understand
 
-* How Pods communicate inside a cluster
-* How Kubernetes Services expose applications
-* How DNS resolution works inside Kubernetes
-* How storage persists beyond Pod lifecycles
-* How Stateful applications manage persistent data
+- How Pods communicate inside a cluster
+- How Kubernetes Services expose applications
+- How DNS resolution works
+- How Service Discovery functions
+- How storage persists beyond Pod lifecycles
+- How Stateful applications manage data
+- How Kubernetes dynamically provisions storage
 
 ### By the End of Week 2 You Should Be Able To
 
-* Expose applications using Services
-* Troubleshoot Service networking
-* Mount temporary and persistent storage
-* Create and use PVs and PVCs
-* Deploy StatefulSets with persistent storage
-* Understand the foundation of StorageClasses and dynamic provisioning
+- Expose applications using Services
+- Troubleshoot Service networking
+- Resolve Services using DNS
+- Understand CoreDNS behavior
+- Mount temporary and persistent storage
+- Create and use PVs and PVCs
+- Deploy StatefulSets
+- Configure StorageClasses
+- Understand dynamic provisioning
+- Understand the purpose of Ingress
+- Understand the direction toward Gateway API
+
+---
+
+## Week 2 Completion
+
+You have now completed the foundational Kubernetes networking and storage topics required before moving into scheduling, workload placement, and operational troubleshooting.
+
+**Week 1 →** Kubernetes Fundamentals
+
+**Week 2 →** Networking & Storage
+
+**Week 3 →** Scheduling & Workloads
+
 
 ---
 
 # Week 3 — Scheduling & Workloads
 
+## Week 3 Progression
+
+**W3D1 →** Scheduling Workloads
+
+**W3D2 →** DaemonSets
+
+**W3D3 →** Pod Affinity / Anti-Affinity + Resource Requests
+
+**W3D4 →** Limits + Probes
+
+**W3D5 →** Jobs
+
+**W3D6 →** CronJobs + HPA basics
+
+**W3D7 →** Troubleshooting Review
+
 ## Scheduling
 
-* [ ] Node scheduling basics
-* [ ] Taints and tolerations
-* [ ] Node affinity
+* [x] Node scheduling basics
+* [x] Taints and tolerations
+* [x] Node affinity
 * [ ] Pod affinity / anti-affinity
 
 ## Workloads
 
+* [x] DaemonSets
 * [ ] Resource requests and limits
 * [ ] Jobs
 * [ ] CronJobs

@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: ds-logging
+
+spec:
+  selector:
+    matchLabels:
+      app: ds-logging
+
+  template:
+    metadata:
+      labels:
+        app: ds-logging
+
+    spec:
+      tolerations:
+      - key: "dedicated"
+        operator: "Equal"
+        value: "logging"
+        effect: "NoSchedule"
+
+      containers:
+      - name: nginx
+        image: nginx:alpine
