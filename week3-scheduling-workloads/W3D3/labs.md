@@ -40,7 +40,8 @@ kubectl get pods -o wide
 Question:
 
 Which node did frontend and backend land on?
-    - Both frontend and backend landed on the same node w3d3-worker.
+
+- Both frontend and backend landed on the same node w3d3-worker.
 
 ---
 
@@ -61,7 +62,8 @@ kubectl get pods -o wide
 Question:
 
 Did api schedule with cache?
-     - Yes. api and cache are both on the same node w3d3-worker2.
+  
+- Yes. api and cache are both on the same node w3d3-worker2.
 
 ---
 
@@ -82,8 +84,10 @@ kubectl get pods -o wide
 Question:
 
 Did replicas spread across nodes?
-    - the podAntiAffinity caused the replicas to spread across nodes as much as possible, but one pod stayed "Pending" because the required anti-affinity rule could not be satisfied on any available node with an existing "frontend" pod.
-    - Key point: requiredDuringSchedulingIgnoredDuringExecution is a hard rule. If it cannot be satisfied, the pod stays Pending.
+
+- the podAntiAffinity caused the replicas to spread across nodes as much as possible, but one pod stayed "Pending" because the required anti-affinity rule could not be satisfied on any available node with an existing "frontend" pod.
+
+- Key point: requiredDuringSchedulingIgnoredDuringExecution is a hard rule. If it cannot be satisfied, the pod stays Pending.
 
 ---
 
@@ -104,8 +108,10 @@ kubectl get pods -o wide
 Question:
 
 Were Pods distributed evenly?
-    - Pods were distributed evenly where possible, but because there were more replicas than nodes, some pods still shared nodes.
-    - Key point: preferred is soft and best-effort, not a guarantee.
+
+- Pods were distributed evenly where possible, but because there were more replicas than nodes, some pods still shared nodes.
+
+- Key point: preferred is soft and best-effort, not a guarantee.
 
 ---
 
@@ -166,10 +172,12 @@ kubectl describe deployment web-resources
 Questions:
 
 - What requests are configured?
-    - Requests: cpu: 100m, memory: 128Mi
+
+  - Requests: cpu: 100m, memory: 128Mi
 
 - What limits are configured?
-    - Limits: cpu: 500m, memory: 256Mi
+
+  - Limits: cpu: 500m, memory: 256Mi
 
 ---
 
@@ -210,12 +218,9 @@ kind delete cluster --name w3d3
 
 ### Simple missing understanding: 
 
-- `required` affinity/anti-affinity = hard constraint, pod may stay `Pending` if impossible
-
-- `preferred` affinity/anti-affinity = soft hint, scheduler tries but can still place pods elsewhere
-
-- `requests` = scheduling reservation -- only used during scheduling. Requests must be <= limits for the same resource.
-
+- `required` affinity/anti-affinity = hard constraint, pod may stay `Pending` if impossible  
+- `preferred` affinity/anti-affinity = soft hint, scheduler tries but can still place pods elsewhere  
+- `requests` = scheduling reservation -- only used during scheduling. Requests must be <= limits for the same resource.  
 - `limits` = runtime enforcement cap. If a container exceeds CPU `limits` it is throttled; if it exceeds memory `limits` it can be OOM-killed.
 
 
