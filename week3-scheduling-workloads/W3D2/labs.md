@@ -22,7 +22,7 @@ Questions:
    - 2 worker nodes
 
 2. How many Pods were created?
-   - 2 pods created for each worker node
+   - 2 Pods total, one Pod on each of the 2 worker nodes. This is because a DaemonSet creates one Pod per node, not multiple Pods per node.
 
 3. Why?
    - DaemonSet ensures all nodes have pods running.
@@ -61,10 +61,10 @@ Questions:
    - 2 worker nodes
 
 2. How many Pods?
-   - two pods 
+   - two pods.
 
 3. What happened automatically?
-   - 2 pods created automatically for each node.
+   - The DaemonSet automatically created a Pod on each node. It’s the DaemonSet controller that responds to the new node and schedules the Pod automatically.
 
 ---
 
@@ -117,7 +117,7 @@ kubectl get pods -o wide
 Questions:
 
 1. Which node received the Pod?
-   - all 2 worker nodes regardless, if one worker is tainted and the DaemonSet has the toleration. 
+   - Both worker nodes received Pods because the DaemonSet Pod has a toleration for the tainted node. The Pod is allowed on the tainted node because of the -> toleration.
 
 2. Why was the tainted node included?
    - The toleration is immune to the node's taint, so it can create pod on the node.
@@ -146,7 +146,7 @@ kubectl delete pod <pod-name>
 Observe:
 
 1. What recreated the Pod?
-    - The DaemonSet Controller recreated the pod except for the tainted node
+   - The DaemonSet Controller recreated the deleted pod except for the tainted node.
 
 2. Was a new node added?
    - No new node added. What made you think so?

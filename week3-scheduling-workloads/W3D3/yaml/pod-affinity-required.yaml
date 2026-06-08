@@ -1,0 +1,35 @@
+# Must run on same node as frontend pod.
+apiVersion: v1
+kind: Pod
+
+metadata:
+  name: frontend
+  labels:
+    app: frontend
+
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+---
+apiVersion: v1
+kind: Pod
+
+metadata:
+  name: backend
+
+spec:
+  affinity:
+    podAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchExpressions:
+          - key: app
+            operator: In
+            values:
+            - frontend
+        topologyKey: kubernetes.io/hostname
+
+  containers:
+  - name: nginx
+    image: nginx

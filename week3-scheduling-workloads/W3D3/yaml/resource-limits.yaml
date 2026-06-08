@@ -1,0 +1,16 @@
+# Hard ceiling.
+apiVersion: v1
+kind: Pod
+
+metadata:
+  name: limits-demo
+
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+
+    resources:
+      limits:
+        cpu: "500m"
+        memory: "256Mi"

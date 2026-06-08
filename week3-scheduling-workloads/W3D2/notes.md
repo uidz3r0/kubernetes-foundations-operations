@@ -227,3 +227,12 @@ Before moving on th W3D3 say this out loud:
 ```
 “DaemonSets run one Pod per eligible node. Node selectors reduce which nodes are eligible. Taints block Pods unless the Pod has a matching toleration.”
 ```
+
+Need N replicas?
+→ Deployment
+
+Need stable identity + storage?
+→ StatefulSet
+
+Need one Pod on every node?
+→ DaemonSet

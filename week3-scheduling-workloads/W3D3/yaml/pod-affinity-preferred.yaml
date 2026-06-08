@@ -1,0 +1,37 @@
+# Try to schedule together.
+apiVersion: v1
+kind: Pod
+
+metadata:
+  name: cache
+  labels:
+    app: cache
+
+spec:
+  containers:
+  - name: redis
+    image: redis
+---
+apiVersion: v1
+kind: Pod
+
+metadata:
+  name: api
+
+spec:
+  affinity:
+    podAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        podAffinityTerm:
+          labelSelector:
+            matchExpressions:
+            - key: app
+              operator: In
+              values:
+              - cache
+          topologyKey: kubernetes.io/hostname
+
+  containers:
+  - name: nginx
+    image: nginx
