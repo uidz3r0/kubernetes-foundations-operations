@@ -1,0 +1,17 @@
+# Ready to receive traffic.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: readiness-demo
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+
+    readinessProbe:
+      httpGet:
+        path: /
+        port: 80
+
+      initialDelaySeconds: 5
+      periodSeconds: 10

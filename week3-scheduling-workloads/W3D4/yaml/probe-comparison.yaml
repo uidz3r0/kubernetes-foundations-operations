@@ -1,0 +1,28 @@
+# Shows all three together.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: probe-comparison
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+
+    startupProbe:
+      httpGet:
+        path: /
+        port: 80
+      failureThreshold: 30
+      periodSeconds: 10
+
+    livenessProbe:
+      httpGet:
+        path: /
+        port: 80
+      periodSeconds: 10
+
+    readinessProbe:
+      httpGet:
+        path: /
+        port: 80
+      periodSeconds: 5
