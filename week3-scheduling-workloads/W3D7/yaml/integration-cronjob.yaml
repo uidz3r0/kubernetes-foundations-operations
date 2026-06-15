@@ -1,0 +1,24 @@
+apiVersion: batch/v1
+kind: CronJob
+
+metadata:
+  name: cleanup
+
+spec:
+  schedule: "*/2 * * * *"
+
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: Never
+
+          containers:
+            - name: cleanup
+
+              image: busybox
+
+              command:
+                - sh
+                - -c
+                - "echo cleanup executed"

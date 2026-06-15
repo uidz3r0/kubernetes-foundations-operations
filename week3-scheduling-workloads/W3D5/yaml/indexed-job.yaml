@@ -1,0 +1,34 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: indexed-job
+
+spec:
+  completions: 3
+  parallelism: 3
+  completionMode: Indexed
+
+  template:
+    metadata:
+      labels:
+        app: indexed-job
+
+    spec:
+      restartPolicy: Never
+
+      containers:
+      - name: worker
+        image: busybox
+
+        env:
+        - name: JOB_INDEX
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.annotations['batch.kubernetes.io/job-completion-index']
+
+        command:
+        - sh
+        - -c
+        - |
+          echo "Index=$JOB_INDEX"
+          sleep 5

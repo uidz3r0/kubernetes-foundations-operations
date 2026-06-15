@@ -1,0 +1,24 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: history-demo
+spec:
+  schedule: "*/1 * * * *"
+
+  successfulJobsHistoryLimit: 2
+  failedJobsHistoryLimit: 1
+
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: Never
+
+          containers:
+            - name: demo
+              image: busybox
+              command:
+                - /bin/sh
+                - -c
+                - echo "Job completed"
+                

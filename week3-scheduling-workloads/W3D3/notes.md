@@ -1,5 +1,18 @@
 # W3D3 Notes
 
+Learning Objectives
+
+By the end of W3D3 you should understand:
+
+- Pod Affinity
+- Pod Anti-Affinity
+- Co-locating workloads
+- Separating workloads
+- Resource Requests
+- Resource Limits
+- How Kubernetes schedules Pods using requests
+- Why requests matter more than limits for scheduling
+
 ## Pod Affinity
 
 Schedule Pods together.

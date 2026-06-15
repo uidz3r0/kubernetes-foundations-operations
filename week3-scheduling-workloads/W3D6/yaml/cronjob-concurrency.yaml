@@ -1,0 +1,26 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: concurrency-demo
+spec:
+  schedule: "*/1 * * * *"
+
+  concurrencyPolicy: Forbid
+
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: Never
+
+          containers:
+            - name: demo
+              image: busybox
+              command:
+                - /bin/sh
+                - -c
+                - |
+                  echo "Starting..."
+                  sleep 90
+                  echo "Finished"
+                  

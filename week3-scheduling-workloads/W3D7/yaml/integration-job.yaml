@@ -1,0 +1,20 @@
+apiVersion: batch/v1
+kind: Job
+
+metadata:
+  name: manual-backup
+
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+
+      containers:
+        - name: backup
+
+          image: busybox
+
+          command:
+            - sh
+            - -c
+            - "echo backup complete"

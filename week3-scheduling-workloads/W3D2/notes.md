@@ -1,5 +1,15 @@
 # W3D2 – DaemonSets
 
+W3D2 is a lighter day by design because DaemonSets are a very important workload type and are used everywhere in production Kubernetes:
+
+- Log collection (Fluent Bit, Promtail)
+- Monitoring agents (Node Exporter)
+- Security agents
+- CNI networking plugins (Calico, Cilium, Flannel)
+- Storage agents
+
+The goal today is to understand "one Pod per node" and how DaemonSets interact with scheduling concepts from W3D1.
+
 ---
 
 ## Learning Objectives

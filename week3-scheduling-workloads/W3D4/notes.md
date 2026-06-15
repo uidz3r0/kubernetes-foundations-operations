@@ -1,5 +1,18 @@
 # W3D4 Notes
 
+W3D4 Learning Objectives
+
+By the end of today you should understand:
+
+- Why resource limits matter
+- CPU throttling vs memory OOM kills
+- Liveness Probes
+- Readiness Probes
+- Startup Probes
+- Probe failure behavior
+- How Services interact with readiness probes
+- Common production probe mistakes
+
 ## Resource Limits
 
 Requests:

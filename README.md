@@ -29,7 +29,7 @@ Focus:
 * Platform engineering
 * Security basics
 * Cluster operations
-* Architecture awareness
+* Architecture awareness or Design & Review
 
 Goal:
 
@@ -40,20 +40,6 @@ This phase is NOT intended to be a pure CKA cram course.
 Instead, it builds the operational foundation that makes future CKA preparation significantly easier.
 
 ---
-
-## Phase 2 — Advanced Kubernetes / CKA Preparation
-
-Estimated later duration: ~6–12+ weeks
-
-Future focus areas:
-
-* Timed troubleshooting
-* kubeadm administration
-* etcd recovery
-* Cluster upgrades
-* Speed and efficiency
-* killer.sh-style scenarios
-* Exam strategy and repetition
 
 Goal:
 
@@ -76,8 +62,6 @@ A topic is considered complete when it can be:
 ---
 
 # Week 1 — Foundations
-
-You are here.
 
 ## Core Objects
 
@@ -178,26 +162,26 @@ Understand Kubernetes core objects and the desired-state model.
 
 ### Services
 
-- [x] ClusterIP
-- [x] NodePort
-- [x] LoadBalancer (Concepts)
-- [x] Ingress (Concepts)
+* [x] ClusterIP
+* [x] NodePort
+* [x] LoadBalancer (Concepts)
+* [x] Ingress (Concepts)
 
 ### Service Discovery
 
-- [x] DNS-based Service Discovery
-- [x] Service Names
-- [x] Service Selectors
+* [x] DNS-based Service Discovery
+* [x] Service Names
+* [x] Service Selectors
 
 ### DNS
 
-- [x] CoreDNS
-- [x] DNS Search Paths
-- [x] Service Resolution
+* [x] CoreDNS
+* [x] DNS Search Paths
+* [x] Service Resolution
 
 ### Modern Kubernetes Networking
 
-- [x] Gateway API (Awareness)
+* [x] Gateway API (Introduction)
 
 ---
 
@@ -205,26 +189,26 @@ Understand Kubernetes core objects and the desired-state model.
 
 ### Basic Volumes
 
-- [x] Volumes
-- [x] volumeMounts
-- [x] emptyDir
-- [x] hostPath
+* [x] Volumes
+* [x] volumeMounts
+* [x] emptyDir
+* [x] hostPath
 
 ### Persistent Storage
 
-- [x] Persistent Volumes (PV)
-- [x] Persistent Volume Claims (PVC)
+* [x] Persistent Volumes (PV)
+* [x] Persistent Volume Claims (PVC)
 
 ### Stateful Workloads
 
-- [x] StatefulSets Basics
-- [x] Headless Services
-- [x] volumeClaimTemplates
+* [x] StatefulSets Basics
+* [x] Headless Services
+* [x] volumeClaimTemplates
 
 ### Advanced Storage
 
-- [x] Dynamic Provisioning
-- [x] StorageClasses
+* [x] Dynamic Provisioning
+* [x] StorageClasses
 
 ---
 
@@ -248,22 +232,20 @@ Understand Kubernetes core objects and the desired-state model.
 
 ### W2D1 — Services + Basic Storage
 
-#### Topics
-
-- ClusterIP
-- NodePort
-- Service selectors
-- PV
-- PVC
-- Pod storage mounting
+* ClusterIP
+* NodePort
+* Service selectors
+* PV
+* PVC
+* Pod storage mounting
 
 #### Files
 
-- `service-clusterip.yaml`
-- `service-nodeport.yaml`
-- `pv.yaml`
-- `pvc.yaml`
-- `pod-storage.yaml`
+* `service-clusterip.yaml`
+* `service-nodeport.yaml`
+* `pv.yaml`
+* `pvc.yaml`
+* `pod-storage.yaml`
 
 **Status:** ✅ Complete
 
@@ -273,16 +255,16 @@ Understand Kubernetes core objects and the desired-state model.
 
 #### Topics
 
-- Storage persistence
-- Data verification
-- PV lifecycle
-- PVC lifecycle
+* Storage persistence
+* Data verification
+* PV lifecycle
+* PVC lifecycle
 
 #### Files
 
-- `pv.yaml`
-- `pvc.yaml`
-- `pod.yaml`
+* `pv.yaml`
+* `pvc.yaml`
+* `pod.yaml`
 
 **Status:** ✅ Complete
 
@@ -292,15 +274,15 @@ Understand Kubernetes core objects and the desired-state model.
 
 #### Topics
 
-- StatefulSets
-- Stable Pod identity
-- Ordered deployment
-- Headless Services
+* StatefulSets
+* Stable Pod identity
+* Ordered deployment
+* Headless Services
 
 #### Files
 
-- `nginx-statefulset.yaml`
-- `headless-service.yaml`
+* `nginx-statefulset.yaml`
+* `headless-service.yaml`
 
 **Status:** ✅ Complete
 
@@ -310,15 +292,15 @@ Understand Kubernetes core objects and the desired-state model.
 
 #### Topics
 
-- Volumes
-- volumeMounts
-- emptyDir
-- hostPath
+* Volumes
+* volumeMounts
+* emptyDir
+* hostPath
 
 #### Files
 
-- `emptydir-pod.yaml`
-- `hostpath-pod.yaml`
+* `emptydir-pod.yaml`
+* `hostpath-pod.yaml`
 
 **Status:** ✅ Complete
 
@@ -328,13 +310,13 @@ Understand Kubernetes core objects and the desired-state model.
 
 #### Topics
 
-- volumeClaimTemplates
-- Per-Pod storage
-- Stateful workload persistence
+* volumeClaimTemplates
+* Per-Pod storage
+* Stateful workload persistence
 
 #### Files
 
-- `statefulset-pvc.yaml`
+* `statefulset-pvc.yaml`
 
 **Status:** ✅ Complete
 
@@ -344,14 +326,14 @@ Understand Kubernetes core objects and the desired-state model.
 
 #### Topics
 
-- StorageClasses
-- Dynamic provisioning
-- Automatic PVC fulfillment
+* StorageClasses
+* Dynamic provisioning
+* Automatic PVC fulfillment
 
 #### Files
 
-- `storageclass.yaml`
-- `pvc-dynamic.yaml`
+* `storageclass.yaml`
+* `pvc-dynamic.yaml`
 
 **Status:** ✅ Complete
 
@@ -361,18 +343,18 @@ Understand Kubernetes core objects and the desired-state model.
 
 #### Topics
 
-- Ingress resources
-- Service Discovery
-- CoreDNS
-- DNS search domains
-- Service resolution
-- Gateway API awareness
+* Ingress resources
+* Service Discovery
+* CoreDNS
+* DNS search domains
+* Service resolution
+* Gateway API awareness
 
 #### Files
 
-- `nginx-deployment.yaml`
-- `nginx-service.yaml`
-- `ingress.yaml`
+* `nginx-deployment.yaml`
+* `nginx-service.yaml`
+* `ingress.yaml`
 
 **Status:** ✅ Complete
 
@@ -382,27 +364,27 @@ Understand Kubernetes core objects and the desired-state model.
 
 ### Understand
 
-- How Pods communicate inside a cluster
-- How Kubernetes Services expose applications
-- How DNS resolution works
-- How Service Discovery functions
-- How storage persists beyond Pod lifecycles
-- How Stateful applications manage data
-- How Kubernetes dynamically provisions storage
+* How Pods communicate inside a cluster
+* How Kubernetes Services expose applications
+* How DNS resolution works
+* How Service Discovery functions
+* How storage persists beyond Pod lifecycles
+* How Stateful applications manage data
+* How Kubernetes dynamically provisions storage
 
 ### By the End of Week 2 You Should Be Able To
 
-- Expose applications using Services
-- Troubleshoot Service networking
-- Resolve Services using DNS
-- Understand CoreDNS behavior
-- Mount temporary and persistent storage
-- Create and use PVs and PVCs
-- Deploy StatefulSets
-- Configure StorageClasses
-- Understand dynamic provisioning
-- Understand the purpose of Ingress
-- Understand the direction toward Gateway API
+* Expose applications using Services
+* Troubleshoot Service networking
+* Resolve Services using DNS
+* Understand CoreDNS behavior
+* Mount temporary and persistent storage
+* Create and use PVs and PVCs
+* Deploy StatefulSets
+* Configure StorageClasses
+* Understand dynamic provisioning
+* Understand the purpose of Ingress
+* Understand the direction toward Gateway API
 
 ---
 
@@ -442,15 +424,15 @@ You have now completed the foundational Kubernetes networking and storage topics
 * [x] Node scheduling basics
 * [x] Taints and tolerations
 * [x] Node affinity
-* [ ] Pod affinity / anti-affinity
+* [x] Pod affinity / anti-affinity
 
 ## Workloads
 
 * [x] DaemonSets
-* [ ] Resource requests and limits
-* [ ] Jobs
-* [ ] CronJobs
-* [ ] Horizontal Pod Autoscaler basics
+* [x] Resource requests and limits
+* [x] Jobs
+* [x] CronJobs
+* [x] Horizontal Pod Autoscaler basics
 
 ## Goal
 
@@ -461,6 +443,14 @@ Understand how workloads are placed, controlled, and scaled.
 # Week 4 — Troubleshooting
 
 ## Real Operations
+
+* W4D1 Pod Troubleshooting
+* W4D2 Scheduling Troubleshooting
+* W4D3 Networking Troubleshooting
+* W4D4 Storage Troubleshooting
+* W4D5 Cluster Component Troubleshooting
+* W4D6 Mock CKA Scenarios
+* W4D7 Week Review
 
 * [ ] Logs
 * [ ] Describe
@@ -479,14 +469,30 @@ Build a break/fix operational mindset.
 
 ---
 
+# Milestone 1
+
+By the end of Week 4 I should be able to:
+
+* Deploy applications
+* Expose applications with Services
+* Troubleshoot Pods
+* Troubleshoot networking
+* Use storage effectively
+* Understand scheduling decisions
+* Diagnose common failures
+
+---
+
 # Week 5 — Platform Engineering
+
+Week 5 begins the transition from Kubernetes user/operator to Platform Engineer thinking.
 
 ## Platform Layer
 
 * [ ] Helm
 * [ ] RBAC
 * [ ] Service Accounts
-* [ ] Gateway API
+* [ ] Gateway API (Platform Engineering Usage)
 * [ ] GitOps concepts
 * [ ] CI/CD into Kubernetes
 * [ ] Prometheus / Grafana basics
@@ -583,6 +589,18 @@ Consolidate operational understanding and improve architecture confidence.
 
 ---
 
+# Milestone 2
+
+By the end of Phase 1 I should be able to:
+
+* Operate Kubernetes workloads confidently
+* Understand platform engineering concepts
+* Understand cluster operations concepts
+* Discuss Kubernetes architecture at interview level
+* Be ready to begin Advanced Kubernetes / CKA preparation
+
+---
+
 # Learning Arc
 
 AWS / Infrastructure Engineer
@@ -614,3 +632,63 @@ weekX/
 * YAML examples
 * networking flow
 * debugging commands
+
+---
+
+## Next Phase
+
+### Phase 2 – Advanced Kubernetes & CKA Preparation (3-6 months)
+
+Planned Topics:
+
+* EKS
+* Terraform + Kubernetes
+* Helm Deep Dive
+* Argo CD
+* GitOps
+* cert-manager
+* External Secrets Operator
+* Prometheus & Grafana
+* kubeadm Administration
+* etcd Recovery
+* CKA Labs
+* killer.sh Practice
+
+### Phase 3 — CKA Preparation
+
+* Timed troubleshooting
+* kubeadm administration
+* etcd recovery
+* Cluster upgrades
+* Speed and efficiency
+* killer.sh-style scenarios
+* Exam strategy
+* Mock exams
+
+## Roadmap
+
+Phase 1
+Kubernetes Foundations & Operations
+(8 weeks)
+
+↓
+
+Phase 2
+Advanced Kubernetes & Platform Engineering
+(3–6 months)
+
+↓
+
+TA-004 Terraform Associate
+(optional around here)
+
+↓
+
+Phase 3
+CKA Preparation
+(6–12 weeks)
+
+↓
+
+CKA Exam
+
