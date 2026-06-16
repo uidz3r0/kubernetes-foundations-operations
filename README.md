@@ -452,12 +452,12 @@ Understand how workloads are placed, controlled, and scaled.
 * W4D6 Mock CKA Scenarios
 * W4D7 Week Review
 
-* [ ] Logs
-* [ ] Describe
+* [x] Logs
+* [x] Describe
 * [ ] Events
-* [ ] CrashLoopBackOff
-* [ ] ImagePullBackOff
-* [ ] Pending Pods
+* [x] CrashLoopBackOff
+* [x] ImagePullBackOff
+* [x] Pending Pods
 * [ ] Resource exhaustion
 * [ ] Debugging techniques 
 * [ ] kubectl debug

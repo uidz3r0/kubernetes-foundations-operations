@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: broken-env-demo
+spec:
+  containers:
+  - name: app
+    image: busybox
+    env:
+    - name: REQUIRED_VAR
+      value: ""
+    command:
+    - sh
+    - -c
+    - |
+      if [ -z "$REQUIRED_VAR" ]; then
+        echo "REQUIRED_VAR missing"
+        exit 1
+      fi
+      sleep 3600
