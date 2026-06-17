@@ -200,6 +200,10 @@ sudo apt install bash-completion -y
 
 echo 'source <(kubectl completion bash)' >> ~/.bashrc
 source ~/.bashrc
+
+alias fix-kind-metrics="kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml && kubectl patch deployment metrics-server -n kube-system --type='json' -p='[{\"op\": \"add\", \"path\": \"/spec/template/spec/containers/0/args/-\", \"value\": \"--kubelet-insecure-tls\"}, {\"op\": \"add\", \"path\": \"/spec/template/spec/containers/0/args/-\", \"value\": \"--kubelet-preferred-address-types=InternalIP\"}]'"
+
+alias k=kubectl
 ```
 
 ---
@@ -217,8 +221,15 @@ Expected:
 Autocomplete suggestions appear.
 
 ---
+# 7. Some good links
 
-# 7. Cluster Cleanup
+[kubernetes.io](https://kubernetes.io/docs/home/), then search `kubectl Quick Reference`
+
+[kubectl cheatsheet](https://www.bluematador.com/learn/kubectl-cheatsheet)
+
+---
+
+# 8. Cluster Cleanup
 
 Delete cluster if needed:
 
