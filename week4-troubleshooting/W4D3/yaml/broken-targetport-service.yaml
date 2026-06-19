@@ -1,0 +1,12 @@
+# Selector is correct. TargetPort is wrong.
+# Pod listens on: Service forwards to: 8080. Traffic fails.
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-svc
+spec:
+  selector:
+    app: web
+  ports:
+  - port: 80
+    targetPort: 8080

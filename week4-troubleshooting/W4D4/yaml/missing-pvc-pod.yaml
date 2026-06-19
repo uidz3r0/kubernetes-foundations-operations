@@ -1,0 +1,17 @@
+# Pod references PVC that does not exist.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: missing-pvc-demo
+spec:
+  containers:
+  - name: app
+    image: nginx
+    volumeMounts:
+    - name: data
+      mountPath: /data
+
+  volumes:
+  - name: data
+    persistentVolumeClaim:
+      claimName: missing-pvc

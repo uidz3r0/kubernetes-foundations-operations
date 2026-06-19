@@ -1,0 +1,14 @@
+# PVC requests storage but no matching PV exists.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: unbound-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+
+  resources:
+    requests:
+      storage: 5Gi
+
+  storageClassName: ""

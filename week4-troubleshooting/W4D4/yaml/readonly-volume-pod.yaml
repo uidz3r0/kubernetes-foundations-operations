@@ -1,0 +1,24 @@
+# Application tries writing to read-only volume.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: readonly-volume-demo
+spec:
+  containers:
+  - name: app
+    image: busybox
+    command:
+      - sh
+      - -c
+      - |
+        echo test > /data/file.txt
+        sleep 3600
+
+    volumeMounts:
+    - name: data
+      mountPath: /data
+      readOnly: true
+
+  volumes:
+  - name: data
+    emptyDir: {}

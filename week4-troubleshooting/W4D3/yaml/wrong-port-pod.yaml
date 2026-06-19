@@ -1,0 +1,13 @@
+# Application listening on unexpected port.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: wrong-port
+  labels:
+    app: wrong-port
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+    ports:
+    - containerPort: 80
