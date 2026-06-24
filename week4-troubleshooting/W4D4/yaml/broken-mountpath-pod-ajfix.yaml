@@ -1,0 +1,17 @@
+# Application expects data somewhere else.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: broken-mountpath-demo
+spec:
+  containers:
+  - name: app
+    image: nginx
+
+    volumeMounts:
+    - name: data
+      mountPath: /usr/share/nginx/html
+
+  volumes:
+  - name: data
+    emptyDir: {}

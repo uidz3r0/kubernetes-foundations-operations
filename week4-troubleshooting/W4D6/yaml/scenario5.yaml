@@ -1,0 +1,13 @@
+# Scenario 5 — CrashLoopBackOff
+apiVersion: v1
+kind: Pod
+metadata:
+  name: broken-app
+spec:
+  containers:
+  - name: app
+    image: busybox
+    command:
+    - sh
+    - -c
+    - exit 1

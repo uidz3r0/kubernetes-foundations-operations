@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: aj-pod
+spec:
+  volumes:
+    - name: aj-pv
+      persistentVolumeClaim:
+        claimName: aj-pvc
+  containers:
+    - name: aj-pvc
+      image: nginx
+      ports:
+        - containerPort: 80
+          name: "http-server"
+      volumeMounts:
+        - mountPath: "/usr/share/nginx/html"
+          name: aj-pv
+

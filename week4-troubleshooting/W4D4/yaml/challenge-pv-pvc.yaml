@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: aj-pv
+  labels:
+    type: local
+spec:
+  storageClassName: aj
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/tmp/dataqwerty"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: aj-pvc
+spec:
+  storageClassName: aj
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi

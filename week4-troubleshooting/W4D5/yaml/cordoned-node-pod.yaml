@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: cordoned-demo
+spec:
+  nodeSelector:
+    kubernetes.io/hostname: w4d5-worker2
+  containers:
+  - name: nginx
+    image: nginx

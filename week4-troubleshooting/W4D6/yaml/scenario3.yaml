@@ -1,0 +1,11 @@
+# Scenario 3 — Scheduling Failure
+apiVersion: v1
+kind: Pod
+metadata:
+  name: scheduler-problem
+spec:
+  nodeSelector:
+    disk: ssd
+  containers:
+  - name: nginx
+    image: nginx

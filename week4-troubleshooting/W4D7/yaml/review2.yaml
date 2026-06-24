@@ -1,0 +1,9 @@
+# Image pull issue.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: review-image
+spec:
+  containers:
+  - name: app
+    image: nginx:9999

@@ -41,12 +41,6 @@ Instead, it builds the operational foundation that makes future CKA preparation 
 
 ---
 
-Goal:
-
-Transition from operational familiarity into exam-level speed and confidence.
-
----
-
 # Progress Legend
 
 * `[ ]` not started
@@ -440,6 +434,20 @@ Understand how workloads are placed, controlled, and scaled.
 
 ---
 
+## Week 3 Completion
+
+You have now completed the scheduling and workload management topics required before moving into operational troubleshooting.
+
+**Week 1 →** Kubernetes Fundamentals
+
+**Week 2 →** Networking & Storage
+
+**Week 3 →** Scheduling & Workloads
+
+**Week 4 →** Troubleshooting
+
+---
+
 # Week 4 — Troubleshooting
 
 ## Real Operations
@@ -454,14 +462,26 @@ Understand how workloads are placed, controlled, and scaled.
 
 * [x] Logs
 * [x] Describe
-* [ ] Events
+* [x] Events
 * [x] CrashLoopBackOff
 * [x] ImagePullBackOff
 * [x] Pending Pods
 * [ ] Resource exhaustion
-* [ ] Debugging techniques 
+* [x] Debugging techniques 
 * [ ] kubectl debug
 * [ ] Ephemeral debug containers
+
+### Storage Troubleshooting (W4D4)
+
+* [x] PVC not found
+* [x] PVC Pending / Unbound
+* [x] PV/PVC binding failures
+* [x] StorageClass mismatch
+* [x] FailedMount events
+* [x] Read-only volume issues
+* [x] Wrong mountPath (silent failure)
+* [x] PVC finalizer hang (delete pod before PVC/PV)
+* [x] hostPath vs dynamic provisioning awareness
 
 ## Goal
 
@@ -637,39 +657,56 @@ weekX/
 
 ## Next Phase
 
-### Phase 2 – Advanced Kubernetes & CKA Preparation (3-6 months)
+### Phase 2 – Advanced Kubernetes & CKA Preparation (6-10 weeks)
 
-Planned Topics:
+#### Platform Engineering
 
-* EKS
-* Terraform + Kubernetes
-* Helm Deep Dive
-* Argo CD
-* GitOps
-* cert-manager
-* External Secrets Operator
-* Prometheus & Grafana
-* kubeadm Administration
-* etcd Recovery
-* CKA Labs
-* killer.sh Practice
+- Helm
+- Argo CD
+- GitOps
+- cert-manager
+- External Secrets Operator
+- Prometheus & Grafana
 
-### Phase 3 — CKA Preparation
+#### Infrastructure Integration
 
-* Timed troubleshooting
-* kubeadm administration
-* etcd recovery
-* Cluster upgrades
-* Speed and efficiency
-* killer.sh-style scenarios
-* Exam strategy
-* Mock exams
+- Terraform + Kubernetes
+- EKS (optional)
+- CI/CD into Kubernetes
+
+#### Operations
+
+- kubeadm administration
+- etcd recovery
+- cluster upgrades
+
+Goal:
+
+Operate and build Kubernetes platforms.
+
+### Phase 3 — CKA Preparation (3-5 weeks)
+
+#### Topics:
+
+- timed labs
+- speed drills
+- imperative commands
+- killer.sh
+- mock exams
+- exam strategy
+
+Goal:
+
+Pass the exam.
 
 ## Roadmap
 
 Phase 1
 Kubernetes Foundations & Operations
 (8 weeks)
+Weeks 1-6 = use kind
+Week 7 = use kubeadm on separate machine, while ubuntu becomes worker
+Week 8 = Use both kind and kubeadm
 
 ↓
 

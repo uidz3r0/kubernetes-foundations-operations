@@ -1,0 +1,22 @@
+# Scenario 1 — Pod Won't Start
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+data:
+  APP_MODE: production
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: app1
+spec:
+  containers:
+  - name: web
+    image: nginx
+    env:
+    - name: MODE
+      valueFrom:
+        configMapKeyRef:
+          name: app-config
+          key: APPMODE

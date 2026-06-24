@@ -1,0 +1,22 @@
+# Scenario 2 — Service Broken
+apiVersion: v1
+kind: Pod
+metadata:
+  name: webapp
+  labels:
+    app: frontend
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-service
+spec:
+  selector:
+    app: frontent
+  ports:
+  - port: 80
+    targetPort: 80

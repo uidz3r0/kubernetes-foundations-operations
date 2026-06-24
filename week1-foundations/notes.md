@@ -466,6 +466,25 @@ kubectl get pods -A
 
 # Delete namespace pod
 kubectl delete pod nginx-ns -n test
+
+# Explain deployment
+kubectl explain deployment
+kubectl explain deployment.apiVersion
+kubectl explain deployment.kind
+kubectl explain deployment.metadata
+kubectl explain deployment.spec
+kubectl explain deployment.spec.template
+kubectl explain deployment.spec.template.spec
+
+k create -h
+k create deployment wazuh --image=nginx -o yaml --dry-run=client
+
+# Man page
+kubectl create secret -h
+kubectl create secret generic -h
+
+kubectl api-resources
+kubectl api-versions
 ```
 
 ### Questions to Answer

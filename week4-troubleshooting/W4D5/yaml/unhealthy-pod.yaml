@@ -1,0 +1,15 @@
+# Used for events and probe troubleshooting.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: unhealthy-pod
+spec:
+  containers:
+  - name: app
+    image: nginx
+    readinessProbe:
+      httpGet:
+        path: /badpath
+        port: 80
+      initialDelaySeconds: 5
+      periodSeconds: 5

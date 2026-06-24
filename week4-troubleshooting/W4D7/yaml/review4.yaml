@@ -1,0 +1,33 @@
+# PVC problem.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: review-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+
+  resources:
+    requests:
+      storage: 1Gi
+
+  storageClassName: does-not-exist
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pvc-pod
+spec:
+  containers:
+  - name: app
+    image: busybox
+    command: ["sleep","3600"]
+
+    volumeMounts:
+    - name: storage
+      mountPath: /data
+
+  volumes:
+  - name: storage
+    persistentVolumeClaim:
+      claimName: review-pvc
