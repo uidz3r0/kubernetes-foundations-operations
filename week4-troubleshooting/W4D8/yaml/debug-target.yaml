@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: debug-target
+
+spec:
+  containers:
+  - name: web
+    image: nginx
+    ports:
+    - containerPort: 80

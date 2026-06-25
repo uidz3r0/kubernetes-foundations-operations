@@ -459,6 +459,7 @@ You have now completed the scheduling and workload management topics required be
 * W4D5 Cluster Component Troubleshooting
 * W4D6 Mock CKA Scenarios
 * W4D7 Week Review
+* W4D8 Advanced Debugging
 
 * [x] Logs
 * [x] Describe
@@ -466,10 +467,10 @@ You have now completed the scheduling and workload management topics required be
 * [x] CrashLoopBackOff
 * [x] ImagePullBackOff
 * [x] Pending Pods
-* [ ] Resource exhaustion
+* [x] Resource exhaustion
 * [x] Debugging techniques 
-* [ ] kubectl debug
-* [ ] Ephemeral debug containers
+* [x] kubectl debug
+* [x] Ephemeral debug containers
 
 ### Storage Troubleshooting (W4D4)
 
@@ -504,6 +505,18 @@ By the end of Week 4 I should be able to:
 ---
 
 # Week 5 — Platform Engineering
+
+## Week Structure
+
+| Day | Topic | 
+| --- | --- |
+| W5D1 | Helm Fundamentals | 
+| W5D2 | RBAC & Service Accounts |
+| W5D3 |	Observability (Prometheus/Grafana concepts) |
+| W5D4 |	CI/CD into Kubernetes | 
+| W5D5 |	GitOps Concepts |
+| W5D6 |	Platform Engineer Lab |
+| W5D7 |	Week Review | 
 
 Week 5 begins the transition from Kubernetes user/operator to Platform Engineer thinking.
 

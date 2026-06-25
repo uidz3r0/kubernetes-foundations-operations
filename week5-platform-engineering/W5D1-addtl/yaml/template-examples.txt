@@ -1,0 +1,27 @@
+# Values
+
+{{ .Values.replicaCount }}
+
+# Release
+
+{{ .Release.Name }}
+
+# Chart
+
+{{ .Chart.Name }}
+
+# Quote
+
+{{ .Values.image.tag | quote }}
+
+# Condition
+
+{{ if .Values.enabled }}
+enabled
+{{ end }}
+
+# Loop
+
+{{ range .Values.ports }}
+{{ . }}
+{{ end }}
