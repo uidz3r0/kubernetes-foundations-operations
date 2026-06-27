@@ -23,7 +23,7 @@ This aligns very closely with the storage troubleshooting tasks that appear in t
 
 ### 1. Check Pod Status
 
-kubectl get pods
+`kubectl get pods`
 
 Common symptoms:
 
@@ -33,7 +33,7 @@ Common symptoms:
 
 ### 2. Describe Pod
 
-kubectl describe pod <pod>
+`kubectl describe pod <pod>`
 
 Look for:
 
@@ -43,9 +43,9 @@ Look for:
 
 ### 3. Check PVC
 
-kubectl get pvc
+`kubectl get pvc`
 
-kubectl describe pvc <pvc>
+`kubectl describe pvc <pvc>`
 
 Look for:
 
@@ -55,9 +55,9 @@ Look for:
 
 ### 4. Check PV
 
-kubectl get pv
+`kubectl get pv`
 
-kubectl describe pv <pv>
+`kubectl describe pv <pv>`
 
 Verify:
 
@@ -67,7 +67,7 @@ Verify:
 
 ### 5. Check StorageClasses
 
-kubectl get storageclass
+`kubectl get storageclass`
 
 Verify:
 
@@ -76,11 +76,41 @@ Verify:
 
 ### 6. Check Events
 
-kubectl get events --sort-by=.metadata.creationTimestamp
+`kubectl get events --sort-by=.metadata.creationTimestamp`
 
 ### 7. Inspect Mounts
 
-kubectl exec -it <pod> -- sh
+`kubectl exec -it <pod> -- sh`
 
 mount
 df -h
+
+---
+
+## Storage Check Flow
+
+Pod > PVC > PV > StorageClass > Provisioner > Mount
+
+|Stage|What you're checking|Command|
+|---|---|---|
+|Pod|Pending / ContainerCreating|kubectl describe pod > look for FailedMount, FailedAttachVolume|
+|PVC | Is it Bound or Pending? | kubectl describe pvc|
+|PV | Capacity + AccessModes match the claim? | kubectl describe pv|
+|StorageClass | Default set? Correct provisioner? | kubectl get sc|
+|Provisioner | Is the CSI driver / provisioner pod running?| kubectl get pods -n kube-system|
+|Mount|Actually mounted inside container? RW vs RO?|kubectl exec -- mount / df -h|
+
+### How it parallels your network flow
+
+The logic is identical -- follow the binding chain from the consumer (Pod) down to the backing resource:
+
+- Network: the Pod consumes a Service, which resolves to Endpoints, etc.
+- Storage: the Pod consumes a PVC, which binds to a PV, which is provisioned by a StorageClass.
+
+The single most important concept (and the #1 CKA storage gotcha) is the PVC <--> PV binding match. A PVC stays Pending if any of these don't match the PV:
+
+- Capacity -- PVC requests more than PV offers
+- AccessModes -- PVC wants `RWX` but PV only offers `RWO`
+- StorageClassName -- must match exactly (including the empty-string `""` case for static provisioning)
+- Selector/labels -- if the PVC uses a selector
+

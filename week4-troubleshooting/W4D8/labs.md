@@ -108,6 +108,59 @@ Questions:
 
     - After exiting, `kubectl describe pod debug-target` will show an Ephemeral Containers section that wasn't there when the pod was first created.
 
+    - They were introduced because many production containers intentionally don't include a shell or debugging tools.
+
+        For example, many production images are based on:
+
+- Distroless
+- Scratch
+- Alpine (minimal)
+- Custom minimal images
+
+These images often do not have:
+
+```bash
+/bin/bash
+sh
+curl
+ping
+tcpdump
+netstat
+ps
+top
+```
+
+If something goes wrong, `kubectl exec` isn't very helpful because there's nothing to run. With an ephemeral container, you're adding another container into the same Pod. It shares much of the Pod's environment rather than logging into the existing container. Use it if the app container doesnt have curl
+
+Just: 
+
+```bash
+kubectl debug mypod -it --image=busybox
+# or my fave
+kubectl debug mypod -it --image=nicolaka/netshoot
+# Already contains: curl dig nslookup tcpdump netstat ss ifconfig traceroute ip ping nc telnet 
+# arp host mtr tshark jq bash
+
+# --image=alpine (slightly larger than busybox)
+# apk add curl
+# apk add tcpdump
+# apk add bind-tools
+
+# --image=redis (for redis-cli)
+# --image=postgres (for psql)
+# --image=mysql (for mysql)
+# --image=amazon/aws-cli (for aws s3, aws sts)
+
+# if you want to install anything: --image=ubuntu
+# then: apt install curl, dnsutils, or tcpdump
+
+dig postgres.default.svc.cluster.local
+curl http://postgres:5432
+nc postgres 5432
+cat /etc/resolv.conf
+ps aux
+```
+
 ---
 
 ## Lab 5 – Events Investigation

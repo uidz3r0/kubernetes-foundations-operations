@@ -143,6 +143,9 @@ Questions:
     2m19s (x4 over 17m)   Warning   FailedScheduling   Pod/pending-demo     0/3 nodes are available: 1 node(s) had untolerated taint {node-role.kubernetes.io/control-plane: }, 2 node(s) didn't match Pod's node affinity/selector. preemption: 0/3 nodes are available: 3 Preemption is not helpful for scheduling.
     ```
 
+    Try this instead:
+      `k events --for pod/pending-demo`
+
 5. What change is required to schedule the pod successfully?
 
 Fix the problem.
@@ -378,12 +381,10 @@ and let Kubernetes recreate the Pods.
 
 Without looking at your notes, explain the difference between:
 
-```bash
-ErrImagePull - typo or Image does not exist issue; first failed pull attempt
-ImagePullBackOff - typo or Image does not exist issue
-CrashLoopBackOff - container starts but crashes immediately or shortly after, and Kubernetes keeps restarting it with increasing delay
-CreateContainerConfigError - Configuration error, ConfigMap or Secret issue
-Pending - No eligible nodes to schedule, Selector/label mismatch
-```
+- `ErrImagePull` - typo or Image does not exist issue; first failed pull attempt
+- `ImagePullBackOff` - typo or Image does not exist issue
+- `CrashLoopBackOff` - container starts but crashes immediately or shortly after, and Kubernetes keeps restarting it with increasing delay
+- `CreateContainerConfigError` - Configuration error, ConfigMap or Secret issue
+- `Pending` - No eligible nodes to schedule, Selector/label mismatch
 
 in one sentence each.

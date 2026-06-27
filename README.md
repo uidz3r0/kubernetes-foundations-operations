@@ -522,14 +522,18 @@ Week 5 begins the transition from Kubernetes user/operator to Platform Engineer 
 
 ## Platform Layer
 
-* [ ] Helm
-* [ ] RBAC
-* [ ] Service Accounts
+* [x] Helm
+* [x] RBAC
+* [x] Service Accounts
 * [ ] Gateway API (Platform Engineering Usage)
 * [ ] GitOps concepts
 * [ ] CI/CD into Kubernetes
-* [ ] Prometheus / Grafana basics
-* [ ] Observability
+* [x] Observability
+    * [x] Logs
+    * [x] Metrics
+    * [x] Events
+    * [x] kubectl top
+* [x] Prometheus / Grafana basics
 
 ## Goal
 
@@ -680,6 +684,16 @@ weekX/
 - cert-manager
 - External Secrets Operator
 - Prometheus & Grafana
+
+  - Prometheus Operator
+  - kube-prometheus-stack
+  - ServiceMonitor
+  - Alertmanager
+  - Grafana dashboards
+  - Loki
+  - PromQL
+  - Recording rules
+  - Alert rules
 
 #### Infrastructure Integration
 

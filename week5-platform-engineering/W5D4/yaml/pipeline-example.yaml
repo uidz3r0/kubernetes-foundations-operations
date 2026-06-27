@@ -1,0 +1,27 @@
+name: Example CI Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Build Image
+      run: docker build -t demo:${{ github.sha }} .
+
+    - name: Push Image
+      run: |
+        echo "docker push"
+
+    - name: Deploy
+      run: |
+        kubectl apply -f app-deployment.yaml
