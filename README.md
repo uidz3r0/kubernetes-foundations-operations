@@ -508,15 +508,15 @@ By the end of Week 4 I should be able to:
 
 ## Week Structure
 
-| Day | Topic | 
+| Day | Topic |
 | --- | --- |
-| W5D1 | Helm Fundamentals | 
+| W5D1 | Helm Fundamentals |
 | W5D2 | RBAC & Service Accounts |
-| W5D3 |	Observability (Prometheus/Grafana concepts) |
-| W5D4 |	CI/CD into Kubernetes | 
-| W5D5 |	GitOps Concepts |
-| W5D6 |	Platform Engineer Lab |
-| W5D7 |	Week Review | 
+| W5D3 | Observability (Prometheus/Grafana concepts) |
+| W5D4 | CI/CD into Kubernetes |
+| W5D5 | GitOps Concepts |
+| W5D6 | Gateway API |
+| W5D7 | Integration Lab |
 
 Week 5 begins the transition from Kubernetes user/operator to Platform Engineer thinking.
 
@@ -525,9 +525,9 @@ Week 5 begins the transition from Kubernetes user/operator to Platform Engineer 
 * [x] Helm
 * [x] RBAC
 * [x] Service Accounts
-* [ ] Gateway API (Platform Engineering Usage)
-* [ ] GitOps concepts
-* [ ] CI/CD into Kubernetes
+* [x] Gateway API (Platform Engineering Usage)
+* [x] GitOps concepts
+* [x] CI/CD into Kubernetes
 * [x] Observability
     * [x] Logs
     * [x] Metrics

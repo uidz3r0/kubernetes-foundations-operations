@@ -1,0 +1,14 @@
+gitops/
+
+├── applications
+│   └── platform-demo
+│       ├── deployment.yaml
+│       ├── service.yaml
+│       └── values.yaml
+│
+├── infrastructure
+│   ├── gateway
+│   └── rbac
+│
+└── clusters
+    └── production

@@ -1,0 +1,8 @@
+replicas: 2
+
+image:
+  repository: nginx
+  tag: "1.29"
+
+service:
+  port: 80

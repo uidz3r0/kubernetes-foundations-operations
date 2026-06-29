@@ -245,3 +245,22 @@ CKS (which comes after CKA) goes significantly deeper on RBAC:
 But CKS also layers on top of that: Network Policies, Pod Security Admission, Falco for runtime security, Trivy for image scanning, Secrets encryption at rest. RBAC is probably 15-20% of CKS.
 
 The good news: CKA solidifies the foundation. By the time you get to CKS the RBAC mechanics will be muscle memory and you just extend them.
+
+---
+
+## Quick Test 
+
+```bash
+# Create the ServiceAccount if needed
+kubectl create serviceaccount app-sa --dry-run=client -o yaml | kubectl apply -f -
+
+# Apply the Role and RoleBinding
+kubectl apply -f role-and-binding.yaml
+
+# Test with a simple pod that uses app-sa
+kubectl run test-pod --image=nginx --restart=Never --dry-run=client -o yaml | \
+  kubectl apply -f -
+
+# Get token for app-sa (if needed for external access)
+kubectl create token app-sa -n default
+```

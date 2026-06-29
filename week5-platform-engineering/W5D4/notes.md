@@ -323,6 +323,27 @@ kubectl describe deployment app | grep -i image
 kubectl get rs
 
 kubectl get pods -w
+
+# AJ notes
+kubectl rollout undo deployment.apps/demo-app
+kubectl describe deployment.apps/demo-app | grep -i image
+    Image:         nginx:1.27
+
+kubectl rollout undo deployment.apps/demo-app
+kubectl describe deployment.apps/demo-app | grep -i image
+    Image:         nginx:1.25
+
+kubectl rollout history deployment.apps/demo-app
+    deployment.apps/demo-app 
+    REVISION  CHANGE-CAUSE
+    3        <none>
+    4        <none>
+
+kubectl rollout history deployment.apps/demo-app --revision=3 | grep -i image
+    Image:      nginx:1.27
+
+kubectl rollout history deployment.apps/demo-app --revision=4 | grep -i image
+    Image:      nginx:1.25
 ```
 
 ---

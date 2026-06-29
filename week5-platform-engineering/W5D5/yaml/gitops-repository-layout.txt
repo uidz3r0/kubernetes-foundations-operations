@@ -1,0 +1,13 @@
+gitops-repo/
+
+├── apps/
+│   └── nginx/
+│       ├── deployment.yaml
+│       └── service.yaml
+│
+├── environments/
+│   ├── dev/
+│   ├── qa/
+│   └── prod/
+│
+└── README.md
