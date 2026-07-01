@@ -111,6 +111,7 @@ Client Version: ...
 
 ```bash
 curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.24.0/kind-linux-amd64
+curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.32.0/kind-linux-amd64
 
 chmod +x ./kind
 sudo mv ./kind /usr/local/bin/kind
@@ -243,6 +244,8 @@ kubectl get nodes
 kubectl create namespace week1
 kubectl config set-context --current --namespace=week1
 kubectl config view --minify | grep namespace
+
+kubectl get namespaces --show-labels
 ```
 
 The week1 cluster creates a default Kind cluster that contains:
