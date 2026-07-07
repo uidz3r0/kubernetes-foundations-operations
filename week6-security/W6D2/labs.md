@@ -96,7 +96,7 @@ kubectl exec env-secret-demo -- env
 
 Question
 
-Can you see PASSWORD?
+Can you see `PASSWORD`?
 
 ---
 
@@ -124,11 +124,21 @@ kubectl exec volume-secret-demo -- cat /etc/secret/password
 
 # Lab 7 — Update Secret
 
+Ensure both `env-secret-demo` and `volume-secret-demo` are still running before continuing.
+
 Edit:
 
 ```bash
 kubectl edit secret db-secret
 ```
+
+Note: values in the `data:` field must be base64-encoded. To encode a new value:
+
+```bash
+echo -n "newpassword" | base64
+```
+
+Paste the output into the edit buffer. Alternatively, switch the field from `data:` to `stringData:` and type plaintext — Kubernetes will encode it automatically.
 
 Observe:
 
@@ -172,9 +182,11 @@ Verify:
 kubectl exec no-token-pod -- ls /var/run/secrets
 ```
 
+Expected: the command fails with `No such file or directory`.
+
 Question
 
-Why is the directory empty?
+Why does the directory not exist at all?
 
 ---
 
@@ -186,7 +198,7 @@ Review:
 cat yaml/registry-secret-example.yaml
 ```
 
-Discuss how imagePullSecrets works.
+Discuss how `imagePullSecrets` works.
 
 ---
 
@@ -200,6 +212,8 @@ kubectl delete pod no-token-pod
 kubectl delete secret db-secret
 kubectl delete secret file-secret
 kubectl delete secret immutable-secret
+
+rm -f password.txt
 ```
 
 ---
@@ -208,14 +222,14 @@ kubectl delete secret immutable-secret
 
 Create one Secret containing:
 
-- username
-- password
-- api-key
+- `username`
+- `password`
+- `api-key`
 
 Create a Pod that consumes:
 
-- username as env variable
-- password as mounted file
-- api-key as mounted file
+- `username` as env variable
+- `password` as mounted file
+- `api-key` as mounted file
 
 Verify all three.

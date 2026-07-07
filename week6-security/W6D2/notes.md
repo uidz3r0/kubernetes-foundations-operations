@@ -318,26 +318,26 @@ kubectl delete secret db-secret
 
 # Interview Questions
 
-Why are Secrets Base64 encoded?
+1. Why are Secrets Base64 encoded?
 
-- (Base64 is transport encoding, not encryption.)
+   - (Base64 is transport encoding, not encryption.)
 
-Difference between ConfigMap and Secret?
+2. Difference between ConfigMap and Secret?
 
-- (ConfigMaps store non-sensitive configuration.)
+   - (ConfigMaps store non-sensitive configuration.)
 
-How are Secrets mounted?
+3. How are Secrets mounted?
 
-- (Environment variables or Volumes.)
+   - (Environment variables or Volumes.)
 
-Can Pods automatically receive updated Secrets?
+4. Can Pods automatically receive updated Secrets?
 
-- Mounted volumes yes.
-- Environment variables no.
+   - Mounted volumes yes.
+   - Environment variables no.
 
-How do production clusters store secrets?
+5. How do production clusters store secrets?
 
-- Usually External Secrets + cloud secret manager.
+   - Usually External Secrets + cloud secret manager.
 
 ---
 

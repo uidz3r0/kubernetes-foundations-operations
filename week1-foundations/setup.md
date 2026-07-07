@@ -288,3 +288,23 @@ This allows:
 - node troubleshooting
 - drain/cordon labs
 - more realistic Kubernetes behavior
+
+## Scan your repository
+
+```bash
+pipx install checkov
+pipx install semgrep
+
+
+cd repo/
+trivy fs . --scanners vuln,secret,misconfig
+trivy fs ./week2-networking-storage/ --scanners misconfig,secret
+
+checkov -d . --framework kubernetes     
+semgrep ci --config auto --include="*.yaml" --include="*.yml"
+```
+
+```bash
+# its possible to connect to control-plane node using
+kubectl debug node/w6d3-control-plane -it --image=ubuntu
+```
