@@ -55,11 +55,31 @@ metadata:
     pod-security.kubernetes.io/enforce: restricted
 ```
 
+PSA is enforced by the API server during admission. When a Pod is created in a namespace with an `enforce` label, Kubernetes checks the Pod against that profile before the scheduler sees it.
+
+Mental model:
+
+```text
+kubectl apply
+  -> Kubernetes API server
+  -> Pod Security Admission check
+  -> rejected if it violates the enforced profile
+  -> scheduler only sees Pods that pass admission
+```
+
+PSA modes:
+
+- `enforce`: blocks Pods that violate the selected profile.
+- `warn`: allows the Pod, but prints warnings to the user.
+- `audit`: allows the Pod, but records audit events.
+
+Important: PSA does not usually remove existing Pods just because a namespace label is added later. It mainly affects Pod creation and updates.
+
 ---
 
 # Security Context
 
-SecurityContext controls:
+SecurityContext __controls__:
 
 - UID
 - GID
@@ -68,7 +88,7 @@ SecurityContext controls:
 - seccomp
 - filesystem permissions
 
-Security contexts can exist at either level:
+Security contexts __can exist at either level__:
 
 - Pod level: `spec.securityContext`
 - Container level: `containers[].securityContext`

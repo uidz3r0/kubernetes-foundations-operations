@@ -529,10 +529,10 @@ Week 5 begins the transition from Kubernetes user/operator to Platform Engineer 
 * [x] GitOps concepts
 * [x] CI/CD into Kubernetes
 * [x] Observability
-    * [x] Logs
-    * [x] Metrics
-    * [x] Events
-    * [x] kubectl top
+  * [x] Logs
+  * [x] Metrics
+  * [x] Events
+  * [x] kubectl top
 * [x] Prometheus / Grafana basics
 
 ## Goal
@@ -545,18 +545,19 @@ Begin thinking like a platform engineer rather than only a workload operator.
 
 ## Security Foundations
 
-* [ ] RBAC deep dive
-* [ ] Secrets handling
-* [ ] Network Policies
-* [ ] Pod Security
-* [ ] Security Contexts
-* [ ] Admission Controllers (high level)
-* [ ] Image security concepts
-* [ ] External Secrets Operator (awareness)
+* [x] RBAC deep dive
+* [x] Secrets handling
+* [x] Network Policies
+* [x] Pod Security
+* [x] Security Contexts
+* [x] Admission Controllers (high level)
+* [x] Image security concepts
+* [x] External Secrets Operator (awareness)
+* [x] Security Integration Lab
 
 ## Goal
 
-Understand Kubernetes security boundaries and workload hardening basics.
+Understand Kubernetes security boundaries and workload hardening basics by applying defense-in-depth using RBAC, Security Contexts, Network Policies, Secrets, and admission controls.
 
 ---
 

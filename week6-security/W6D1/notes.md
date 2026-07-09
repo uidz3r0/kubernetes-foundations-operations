@@ -300,3 +300,4 @@ This is the foundation for everything else in Week 6:
 - W6D7 — Security Integration Lab (combine RBAC, NetworkPolicies, Security Contexts, and Secrets in a realistic scenario)
 
 This sequence builds from authorization to workload hardening and aligns well with the types of Kubernetes security questions commonly asked in senior Platform Engineering and DevOps understanding.
+

@@ -22,6 +22,38 @@ Notice:
 - Privilege escalation is allowed.
 - The root filesystem is writable.
 
+Confirm the runtime user:
+
+```bash
+kubectl exec insecure -- id
+```
+
+Expected:
+
+```text
+uid=0(root)
+```
+
+Confirm privilege escalation is not blocked:
+
+```bash
+kubectl exec insecure -- sh -c 'grep NoNewPrivs /proc/1/status'
+```
+
+Expected:
+
+```text
+NoNewPrivs:	0
+```
+
+Confirm the root filesystem is writable:
+
+```bash
+kubectl exec insecure -- sh -c 'touch /tmp/w6d4-test && rm /tmp/w6d4-test'
+```
+
+Expected: the command succeeds.
+
 Delete the Pod afterwards:
 
 ```bash
