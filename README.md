@@ -55,6 +55,60 @@ A topic is considered complete when it can be:
 
 ---
 
+# Week 0 — Home Lab Preparation (1 Day)
+
+## Objectives
+
+Prepare Linux virtual machines for a kubeadm-based Kubernetes cluster.
+
+## Topics
+
+### Hardware
+
+* Plan cluster topology
+* Control Plane vs Worker roles
+* CPU/RAM sizing
+* Static IP planning
+
+### Operating System
+
+* Install Rocky Linux / Ubuntu
+* Configure hostname
+* Configure /etc/hosts
+* Configure static networking
+* SSH access
+
+### Linux Preparation
+
+* Disable swap
+* Configure kernel modules
+* Configure sysctl
+* Install containerd
+* Configure systemd cgroups
+
+### Kubernetes Packages
+
+* Install kubeadm
+* Install kubelet
+* Install kubectl
+
+### Validation
+
+* Verify networking
+* Verify time synchronization
+* Verify containerd
+* Verify kubelet service
+
+Goal
+
+Prepare all nodes for Kubernetes installation using kubeadm.
+
+Notes
+
+Cluster initialization is intentionally deferred until Week 7.
+
+---
+
 # Week 1 — Foundations
 
 ## Core Objects
@@ -561,34 +615,44 @@ Understand Kubernetes security boundaries and workload hardening basics by apply
 
 ---
 
-# Week 7 — Cluster Operations
-
 ## Cluster Administration
 
+* [ ] Install Kubernetes components (containerd, kubelet, kubeadm, kubectl)
+* [ ] Bootstrap a control plane with kubeadm
+* [ ] Join worker nodes
+* [ ] Expand to a highly available control plane
 * [ ] Node maintenance
 * [ ] cordon
 * [ ] drain
 * [ ] uncordon
+* [ ] Cluster upgrades
 * [ ] Static Pods
-* [ ] kubeadm concepts
-* [ ] etcd concepts
-* [ ] Certificate management
 * [ ] kubelet behavior
 * [ ] Control Plane Components
+* [ ] etcd concepts
+* [ ] etcd backup and restore
+* [ ] Certificate management
+* [ ] Cluster troubleshooting
 
 ## Goal
 
-Understand cluster internals and administrative operations.
+Understand how to build, operate, maintain, and troubleshoot a Kubernetes cluster using kubeadm.
 
 ## Note
 
-kind abstracts some cluster bootstrap and administration internals.
+Unlike earlier weeks that use kind, this week focuses on real cluster administration using a kubeadm-based home lab.
 
-Later practice may use:
+Topics include:
 
-* kubeadm on VMs
-* cloud sandbox environments
-* killer.sh-style labs
+* Installing Kubernetes components
+* Bootstrapping a control plane
+* Joining worker nodes
+* Expanding to multiple control planes
+* Node maintenance and upgrades
+* etcd backup and restore
+* Certificate renewal
+* Troubleshooting cluster failures
+* CKA-style administration scenarios
 
 ---
 

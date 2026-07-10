@@ -1,5 +1,8 @@
 # W0D1 Lab
 
+sudo timedatectl set-timezone Australia/Brisbane
+
+
 ## Verify hostname
 
 ```
@@ -150,6 +153,15 @@ Expected
 
 ```
 1
+```
+
+---
+
+For Ubuntu
+
+```bash
+$ grep HandleLidSwitch /etc/systemd/logind.conf
+HandleLidSwitch=ignore
 ```
 
 ---
