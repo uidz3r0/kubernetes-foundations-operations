@@ -108,6 +108,34 @@ SUCCESS
 
 ---
 
+## Steps Detailed:
+
+Step 1.  Archive and Copy to luke 
+
+```bash
+cd week7-cluster-operations/W7D2/
+tar -cvf w7d2.tar manifests scripts
+scp w7d2.tar luke:/tmp/x/
+```
+
+Step 2. Login to luke and expand the tar file
+
+```bash
+ssh luke
+
+cd /root/w7d2/
+tar -xvf /tmp/x/w7d2.tar
+```
+
+Step 3. Run 
+
+```bash
+sh scripts/rocky/init-control-plane.sh
+
+```
+
+---
+
 ## Learning Outcomes
 
 By the end of W7D2, you should be able to:
