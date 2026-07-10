@@ -62,7 +62,8 @@ Perform this lab on every node.
 6. Install Kubernetes packages
 7. Prevent automatic package upgrades
 8. Enable kubelet
-9. Verify installation
+9. Install crictl
+10. Verify installation
 
 No cluster is created today.
 
@@ -102,10 +103,10 @@ Tar and copy the files:
 
 ```bash
 cd /home/allan/k8s/week7-cluster-operations/W7D1/
-tar -cvf scripts.tar scripts
-scp scripts.tar luke:/tmp/x/
-scp scripts.tar han:/tmp/x/
-scp scripts.tar leia:/tmp/x/
+tar -cvf w7d1.tar scripts
+scp w7d1.tar luke:/tmp/x/
+scp w7d1.tar han:/tmp/x/
+scp w7d1.tar leia:/tmp/x/
 ```
 
 **Steps 1–4**
@@ -113,8 +114,8 @@ scp scripts.tar leia:/tmp/x/
 Run the appropriate script for your operating system:
 
 ```bash
-mkdir /root/kubeadm-install/ ; cd /root/kubeadm-install/ 
-tar -xvf /tmp/x/scripts.tar
+mkdir /root/w7d1/ ; cd /root/w7d1/ 
+tar -xvf /tmp/x/w7d1.tar
 ```
 
 > **Rocky Linux only**
@@ -145,6 +146,28 @@ sh scripts/ubuntu/install-kubernetes.sh
 ```
 
 **Step 9**
+
+Install the CRI troubleshooting tool:
+
+```bash
+sh scripts/common/install-crictl.sh
+```
+
+You'll use `crictl` later for:
+
+- troubleshooting
+- inspecting running containers
+- viewing logs
+- debugging kubelet
+
+```text
+crictl ps
+crictl images
+crictl logs <container>
+crictl inspect <container>
+```
+
+**Step 10**
 
 Verify the installation:
 
@@ -209,6 +232,10 @@ kubelet --version
 kubeadm version
 
 kubectl version --client
+
+crictl --version
+
+runc --version
 ```
 
 ---
@@ -260,3 +287,117 @@ The installation process should result in:
 - kubectl installed
 - Kubernetes packages locked
 - Ready for `kubeadm init`
+
+---
+
+- CRI - Container Runtime Interface
+- OCI - Open Container Initiative
+- CNI - Container Networking Interface
+
+* CRI (communication)
+* OCI (container execution)
+* CNI (networking)
+
+```text
+             Kubernetes
+                  │
+                  ▼
+              kubelet
+                  │
+        Container Runtime Interface (CRI)
+                  │
+                  ▼
+             containerd
+                  │
+       Open Container Initiative (OCI)
+                  │
+                  ▼
+                runc
+                  │
+                  ▼
+             Linux Kernel
+
+Container Networking Interface (CNI)
+            ↑
+    Configures Pod networking
+```
+
+---
+
+## Installed Components
+
+```text
+Container Runtime
+-----------------
+✓ containerd
+✓ runc
+
+Networking
+----------
+✓ CNI plugins
+
+Kubernetes
+----------
+✓ kubelet
+✓ kubeadm
+✓ kubectl
+
+Administration
+--------------
+✓ crictl
+```
+
+Your Kubernetes node only needs:
+
+```text
+✓ containerd
+✓ runc
+✓ kubelet
+✓ kubeadm
+✓ kubectl
+✓ crictl
+✓ CNI plugins
+```
+
+---
+
+### For the first control plane:
+
+| Port	    | Protocol | Purpose |
+| --------- | -------- | ------- |
+| 6443	    | TCP	   | Kubernetes API Server |
+| 2379–2380	| TCP	   | etcd |
+| 10250	    | TCP	   | kubelet API |
+| 10257	    | TCP	   | Controller Manager |
+| 10259	    | TCP	   | Scheduler |
+
+### For workers:
+
+
+| Port	      | Protocol | Purpose |
+| ----------- | -------- | ------- |
+| 10250	      | TCP	     | kubelet |
+| 30000–32767 | TCP	     | NodePort Services (if used) | 
+
+---
+
+```bash
+root@luke $ crictl ps
+CONTAINER           IMAGE               CREATED             STATE               NAME                      ATTEMPT             POD ID              POD                            NAMESPACE
+ac3fcfb8ba970       9634d94a0a927       2 minutes ago       Running             kube-proxy                0                   68763e0928e4a       kube-proxy-9m9qf               kube-system
+e25e2407c3e4a       a3e246e9556e9       2 minutes ago       Running             etcd                      0                   f7f8a81b80332       etcd-luke                      kube-system
+653f4d464ed85       a5fa86b27df86       2 minutes ago       Running             kube-scheduler            0                   5bed11c485f62       kube-scheduler-luke            kube-system
+13c6ec6c0274f       f66dcec3b177e       2 minutes ago       Running             kube-controller-manager   0                   43a64843a8552       kube-controller-manager-luke   kube-system
+11cb00563583b       11400659976fd       2 minutes ago       Running             kube-apiserver            0                   337c057146ac7       kube-apiserver-luke            kube-system
+
+root@luke $ crictl images
+IMAGE                                     TAG                 IMAGE ID            SIZE
+registry.k8s.io/coredns/coredns           v1.12.1             52546a367cc9e       22.4MB
+registry.k8s.io/etcd                      3.6.5-0             a3e246e9556e9       22.9MB
+registry.k8s.io/kube-apiserver            v1.34.9             11400659976fd       27.1MB
+registry.k8s.io/kube-controller-manager   v1.34.9             f66dcec3b177e       22.8MB
+registry.k8s.io/kube-proxy                v1.34.9             9634d94a0a927       26MB
+registry.k8s.io/kube-scheduler            v1.34.9             a5fa86b27df86       17.4MB
+registry.k8s.io/pause                     3.10.1              cd073f4c5f6a8       320kB
+
+```

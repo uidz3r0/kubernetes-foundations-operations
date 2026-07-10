@@ -127,11 +127,48 @@ cd /root/w7d2/
 tar -xvf /tmp/x/w7d2.tar
 ```
 
-Step 3. Run init-control-plane.sh
+Step 3. Run verify-install.sh
+
+```bash
+sh /root/w7d1/scripts/common/verify-install.sh
+```
+
+Step 4. Run init-control-plane.sh / kubeadm init
 
 ```bash
 sh scripts/rocky/init-control-plane.sh
+```
 
+Step 5. Run kubeconfig.sh
+
+```bash
+sh scripts/common/kubeconfig.sh
+```
+
+Step 6. Run Validation
+
+```bash
+sh scripts/common/check-cluster.sh
+
+===== Nodes =====
+NAME   STATUS     ROLES           AGE   VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE                      KERNEL-VERSION                 CONTAINER-RUNTIME
+luke   NotReady   control-plane   36m   v1.34.9   10.1.1.10     <none>        Rocky Linux 9.8 (Blue Onyx)   5.14.0-687.17.1.el9_8.x86_64   containerd://2.2.5
+
+===== System Pods =====
+NAMESPACE     NAME                           READY   STATUS    RESTARTS   AGE
+kube-system   coredns-66bc5c9577-7rtq9       0/1     Pending   0          35m
+kube-system   coredns-66bc5c9577-gg2v5       0/1     Pending   0          35m
+kube-system   etcd-luke                      1/1     Running   0          35m
+kube-system   kube-apiserver-luke            1/1     Running   0          35m
+kube-system   kube-controller-manager-luke   1/1     Running   0          35m
+kube-system   kube-proxy-9m9qf               1/1     Running   0          35m
+kube-system   kube-scheduler-luke            1/1     Running   0          35m
+
+===== Cluster Info =====
+Kubernetes control plane is running at https://10.1.1.10:6443
+CoreDNS is running at https://10.1.1.10:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+
+To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
 ```
 
 ---
@@ -149,3 +186,20 @@ By the end of W7D2, you should be able to:
 * Recognize why the control plane reports NotReady before a CNI plugin is installed.
 
 This keeps the scope focused on bootstrapping a single control plane, leaving networking, worker joins, and high availability for later days.
+
+---
+
+## Troubleshooting
+
+- We needed to go back to W7D1 and install `crictl` for troubleshooting and `runc` wasn't also installed for containerd
+- We reset the cluster since there is no node yet anyway, below set of commands removes the manifest files:
+
+```bash
+sudo kubeadm reset -f
+sudo rm -rf /etc/cni/net.d
+sudo rm -rf ~/.kube
+sudo systemctl restart containerd
+sudo systemctl restart kubelet
+```
+
+- then re-run: `sh scripts/rocky/init-control-plane.sh`

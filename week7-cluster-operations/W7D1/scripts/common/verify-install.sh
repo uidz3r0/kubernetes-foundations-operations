@@ -11,7 +11,15 @@ systemctl is-enabled kubelet
 
 echo
 echo "===== CRI ====="
-crictl info >/dev/null && echo "CRI OK" || echo "crictl not installed"
+crictl info >/dev/null && crictl version && echo "CRI OK" || echo "crictl not installed"
+
+echo
+echo "===== OCI Runtime ====="
+if command -v runc >/dev/null 2>&1; then
+    runc --version | head -1
+else
+    echo "runc not installed"
+fi
 
 echo
 echo "===== cgroup ====="
@@ -35,3 +43,14 @@ echo
 echo "===== Versions ====="
 kubeadm version
 kubectl version --client
+
+echo
+echo "===== Firewall ====="
+
+if command -v firewall-cmd >/dev/null 2>&1; then
+    systemctl is-active firewalld
+elif command -v ufw >/dev/null 2>&1; then
+    systemctl is-active ufw
+else
+    echo "No supported firewall service detected."
+fi

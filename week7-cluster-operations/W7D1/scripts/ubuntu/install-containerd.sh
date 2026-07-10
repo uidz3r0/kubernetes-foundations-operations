@@ -8,8 +8,8 @@ sudo apt update
 
 if ! command -v containerd >/dev/null 2>&1; then
     echo "Installing containerd..."
-    # install package
-    sudo apt install -y containerd
+    # install package; runc is a dependency of containerd and will be installed automatically
+    sudo apt install -y containerd 
 else
     echo "containerd already installed."
 fi

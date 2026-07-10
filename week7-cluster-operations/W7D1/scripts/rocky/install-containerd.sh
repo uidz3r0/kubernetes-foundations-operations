@@ -8,8 +8,8 @@ sudo dnf update -y
 
 if ! command -v containerd >/dev/null 2>&1; then
     echo "Installing containerd..."
-    # install package
-    sudo dnf install -y containerd
+    # install package run 
+    sudo dnf install -y containerd runc
 else
     echo "containerd already installed."
 fi
