@@ -127,7 +127,7 @@ cd /root/w7d2/
 tar -xvf /tmp/x/w7d2.tar
 ```
 
-Step 3. Run 
+Step 3. Run init-control-plane.sh
 
 ```bash
 sh scripts/rocky/init-control-plane.sh
