@@ -22,10 +22,16 @@ log_header() { echo -e "\n${BOLD}${CYAN}═══════ $1 ═════
 log_subheader() { echo -e "\n${MAGENTA}${ARROW}${NC} ${BOLD}$1${NC}"; }
 
 log_header "Cluster Nodes"
-kubectl get nodes -o wide
+kubectl get nodes
 
 log_header "System Pods"
 kubectl get pods -A
+
+log_header "Calico Pods"
+kubectl get pods -A | grep calico
+
+log_header "CoreDNS"
+kubectl get pods -n kube-system -l k8s-app=kube-dns
 
 log_header "Cluster Info"
 kubectl cluster-info

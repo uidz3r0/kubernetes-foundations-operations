@@ -35,30 +35,40 @@ Learn:
 Learn:
 
 - kubeadm init
-- kubeconfig
-- Admin credentials
-- Static Pods
-- Installing a CNI plugin
-- Verifying cluster health
-- kubectl cluster-info
+- Configure kubectl
+- Verify static pods
+- Verify control plane
 
 ---
 
-## W7D3 — Join Worker Nodes
+## W7D3 — Install the CNI Plugin
+
+Learn:
+
+- Install Calico
+- Understand what a CNI does
+- Node becomes Ready
+- CoreDNS becomes Running
+- Verify cluster networking
+
+---
+
+## W7D4 — Join Worker Nodes
 
 Learn:
 
 - kubeadm join
 - Bootstrap tokens
-- Certificate discovery
+- Discovery token CA hash
 - Node registration
-- Node Ready status
-- Scheduling workloads
-- Removing and rejoining nodes
+- Workload scheduling
+- Remove/rejoin worker nodes
 
 ---
 
-## W7D4 — High Availability Control Plane
+## W7D5 — High Availability Control Plane - old
+
+## W7D5 — High Availability Control Plane - Recreate
 
 Learn:
 
@@ -72,34 +82,39 @@ Learn:
 
 ---
 
-## W7D5 — Cluster Maintenance
-
-Learn:
-
-- kubectl cordon
-- kubectl drain
-- kubectl uncordon
-- Rolling node maintenance
-- Node upgrades
-- Package upgrades
-- Cluster version verification
-
----
-
 ## W7D6 — Backup and Recovery
 
 Learn:
 
 - etcd snapshots
 - Restoring etcd
-- Cluster recovery concepts
 - Static Pod manifests
 - Disaster recovery workflow
 - Backup best practices
+- Cluster recovery verification
 
 ---
 
-## W7D7 — Certificates and Troubleshooting
+## W7D7 — High Availability and Cluster Maintenance
+
+(VIP, kube-vip, drain, failover)
+
+Learn:
+
+- kube-vip
+- Virtual IP (VIP)
+- Control plane endpoint
+- cordon
+- drain
+- uncordon
+- Rolling node maintenance
+- Control plane failover
+- Worker maintenance
+
+
+---
+
+## W7D8 — Upgrades, Certificates & Troubleshooting
 
 Learn:
 
@@ -107,8 +122,13 @@ Learn:
 - kubeadm certs
 - Certificate expiration
 - Certificate renewal
+- kubeadm upgrade plan
+- kubeadm upgrade apply
+- kubelet upgrades
+- kubectl upgrades
+- Cluster version verification
 - Control plane troubleshooting
-- Worker troubleshooting
+- Worker node troubleshooting
 - Common kubeadm issues
 
 ---
@@ -133,6 +153,35 @@ Backup
 Recover
     ↓
 Troubleshoot
+```
+
+---
+
+Overall Progression
+
+```text
+W7D1  Install Kubernetes
+          │
+          ▼
+W7D2  Bootstrap Control Plane
+          │
+          ▼
+W7D3  Install CNI
+          │
+          ▼
+W7D4  Join Worker Nodes
+          │
+          ▼
+W7D5  High Availability
+          │
+          ▼
+W7D6  Backup & Recovery
+          │
+          ▼
+W7D7  Cluster Maintenance & Upgrades
+          │
+          ▼
+W7D8  Certificates & Troubleshooting
 ```
 
 ---

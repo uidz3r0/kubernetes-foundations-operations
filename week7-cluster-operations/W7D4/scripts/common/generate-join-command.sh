@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 # Color definitions
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -21,11 +23,8 @@ ARROW="➜"
 log_header() { echo -e "\n${BOLD}${CYAN}═══════ $1 ═══════${NC}"; }
 log_subheader() { echo -e "\n${MAGENTA}${ARROW}${NC} ${BOLD}$1${NC}"; }
 
-log_header "Cluster Nodes"
-kubectl get nodes -o wide
+log_header "kubeadm Join Command"
 
-log_header "System Pods"
-kubectl get pods -A
+kubeadm token create --print-join-command
 
-log_header "Cluster Info"
-kubectl cluster-info
+echo

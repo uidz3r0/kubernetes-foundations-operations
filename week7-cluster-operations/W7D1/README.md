@@ -226,15 +226,11 @@ Verify the repository has been added successfully before installing Kubernetes p
 
 ```bash
 containerd --version
-
 kubelet --version
-
 kubeadm version
-
 kubectl version --client
 
 crictl --version
-
 runc --version
 ```
 

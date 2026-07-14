@@ -743,8 +743,13 @@ weekX/
 
 #### Platform Engineering
 
+> Continue using `kubectl` as the primary management interface.
+> Use `Rancher` only to visualize, inspect, and manage resources
+> — not to replace understanding of Kubernetes."
+
 - Helm
 - Argo CD
+- Rancher
 - GitOps
 - cert-manager
 - External Secrets Operator

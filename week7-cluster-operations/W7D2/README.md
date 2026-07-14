@@ -203,3 +203,51 @@ sudo systemctl restart kubelet
 ```
 
 - then re-run: `sh scripts/rocky/init-control-plane.sh`
+
+---
+
+## In Production
+
+```bash
+sudo kubeadm reset -f              # Resets kubeadm state, removes control plane files
+sudo rm -rf ~/.kube                # Removes kubectl config (local admin credentials)
+sudo rm -rf /etc/cni/net.d         # Removes CNI plugin configurations
+sudo systemctl restart containerd  # Cleans container runtime state
+sudo systemctl restart kubelet     # Restarts kubelet to start fresh
+```
+
+### Before Resetting - Important Considerations
+
+⚠️ Only reset if:
+
+- You have backed up critical data (etcd snapshots, persistent volumes, configmaps with important data)
+- This is not a production cluster with live workloads, OR you have a disaster recovery plan
+- You've exhausted troubleshooting options
+
+For production clusters, prefer:
+
+- Adding/removing nodes individually: kubectl drain → kubectl delete node
+- Fixing specific components rather than full reset
+- Using kubeadm reset only on nodes being decommissioned, not the entire cluster at once
+
+### Proper Reset Procedure for Multi-Node Clusters
+
+If you must reset all nodes:
+
+1. Worker nodes first (from any worker):
+
+```bash
+sudo kubeadm reset -f
+```
+
+2. Control plane node last (after workers are reset):
+
+```bash
+sudo kubeadm reset -f
+sudo rm -rf ~/.kube
+```
+
+Then re-initialize with `sudo kubeadm init` and rejoin workers with `kubeadm join`
+
+***Remember***: Reset is destructive—it removes all cluster state. Only do it when you're certain a rebuild is the right choice.
+
