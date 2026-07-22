@@ -340,3 +340,66 @@ It won't match the scale of products like `Backstage` or commercial platforms, b
 `Scorecards` Benchmarking tools that measure software quality, security posture, or compliance against organizational standards, often integrated into the software catalog.
 
 `TechDocs` Documentation-as-code systems where docs are versioned with source code and rendered automatically in the developer portal. 
+
+---
+
+## Setup in padme 
+
+```bash
+git clone https://github.com/uidz3r0/k8s-lab.git /k8s-lab
+/k8s-lab/scripts/setup/install-crictl.sh
+
+# ~/k8s/week0-home-lab-setup/W0D1/scripts/common.sh
+/k8s-lab/scripts/setup/common.sh 
+
+# run as regular-user
+/k8s-lab/scripts/setup/01-node-setup.sh
+    sudo ufw allow 6443/tcp
+    sudo ufw allow 2379:2380/tcp
+    sudo ufw allow 10250/tcp
+    sudo ufw allow 10257/tcp
+    sudo ufw allow 10259/tcp
+
+
+# In luke,
+/k8s-lab/scripts/cluster/generate-control-plane-join.sh
+
+# In padme
+/k8s-lab/scripts/cluster/reset-control-plane.sh
+
+kubeadm join k8s-api.lab:6443 --token ejsw3y.8j4789r75cw0p7e8 --discovery-token-ca-cert-hash sha256:990784e53aaff966b2fa6a0a2c1d1ca1b44af3b15bb5118e841df6f651fd5c53 --control-plane --certificate-key 1a17c24d6d5793271ce3ef7df45363d06b6930e73551005bacf78a365f8e41d0
+
+# kube-vip setup found W7D5/lab0.md
+
+# Identify latest stable version
+curl -sL https://api.github.com/repos/kube-vip/kube-vip/releases | jq -r ".[0].name"
+    v1.2.1
+
+     sudo ctr image pull ghcr.io/kube-vip/kube-vip:v1.2.1
+
+     ping k8s-api.lab
+     ip addr show wlp2s0 | grep 10.1.1.15
+
+     kubectl get pods -n kube-system | grep vip
+
+# generate the static pods
+ip addr show
+
+export INTERFACE=wlo1
+export VIP=10.1.1.15
+VERSION=v1.2.1
+
+sudo ctr run --rm --net-host \
+  ghcr.io/kube-vip/kube-vip:${VERSION} \
+  vip \
+  /kube-vip manifest pod \
+    --interface ${INTERFACE} \
+    --address ${VIP} \
+    --controlplane \
+    --services \
+    --arp \
+    --leaderElection \
+  | sudo tee /etc/kubernetes/manifests/kube-vip.yaml      
+
+kubectl get pods -n kube-system | grep vip  
+```

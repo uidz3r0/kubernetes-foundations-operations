@@ -615,24 +615,26 @@ Understand Kubernetes security boundaries and workload hardening basics by apply
 
 ---
 
+# Week 7 — Cluster Operations
+
 ## Cluster Administration
 
-* [ ] Install Kubernetes components (containerd, kubelet, kubeadm, kubectl)
-* [ ] Bootstrap a control plane with kubeadm
-* [ ] Join worker nodes
-* [ ] Expand to a highly available control plane
-* [ ] Node maintenance
-* [ ] cordon
-* [ ] drain
-* [ ] uncordon
-* [ ] Cluster upgrades
-* [ ] Static Pods
-* [ ] kubelet behavior
-* [ ] Control Plane Components
-* [ ] etcd concepts
-* [ ] etcd backup and restore
-* [ ] Certificate management
-* [ ] Cluster troubleshooting
+* [x] Install Kubernetes components (containerd, kubelet, kubeadm, kubectl)
+* [x] Bootstrap a control plane with kubeadm
+* [x] Join worker nodes
+* [x] Expand to a highly available control plane
+* [x] Node maintenance
+* [x] cordon
+* [x] drain
+* [x] uncordon
+* [x] Cluster upgrades
+* [x] Static Pods
+* [x] kubelet behavior
+* [x] Control Plane Components
+* [x] etcd concepts
+* [x] etcd backup and restore
+* [x] Certificate management
+* [x] Cluster troubleshooting
 
 ## Goal
 
@@ -747,35 +749,35 @@ weekX/
 > Use `Rancher` only to visualize, inspect, and manage resources
 > — not to replace understanding of Kubernetes."
 
-- Helm
-- Argo CD
-- Rancher
-- GitOps
-- cert-manager
-- External Secrets Operator
-- Prometheus & Grafana
-
-  - Prometheus Operator
-  - kube-prometheus-stack
-  - ServiceMonitor
-  - Alertmanager
-  - Grafana dashboards
-  - Loki
-  - PromQL
-  - Recording rules
-  - Alert rules
+* Helm
+* Argo CD
+* GitOps
+* cert-manager
+* External Secrets Operator
+* Prometheus & Grafana
+  * Prometheus Operator
+  * kube-prometheus-stack
+  * ServiceMonitor
+  * Alertmanager
+  * Grafana dashboards
+  * Loki
+  * PromQL
+  * Recording rules
+  * Alert rules
 
 #### Infrastructure Integration
 
-- Terraform + Kubernetes
-- EKS (optional)
-- CI/CD into Kubernetes
+* Terraform + Kubernetes
+* EKS (optional)
+* CI/CD into Kubernetes
 
 #### Operations
 
-- kubeadm administration
-- etcd recovery
-- cluster upgrades
+* kubeadm administration
+* etcd recovery
+* cluster upgrades
+
+* *Rancher* optional
 
 Goal:
 
@@ -785,12 +787,12 @@ Operate and build Kubernetes platforms.
 
 #### Topics:
 
-- timed labs
-- speed drills
-- imperative commands
-- killer.sh
-- mock exams
-- exam strategy
+* timed labs
+* speed drills
+* imperative commands
+* killer.sh
+* mock exams
+* exam strategy
 
 Goal:
 

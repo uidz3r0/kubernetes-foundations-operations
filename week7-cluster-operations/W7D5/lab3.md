@@ -5,6 +5,9 @@ On han.lab execute the control-plane join command.
 Example:
 
 ```bash
+git clone https://github.com/uidz3r0/k8s-lab.git /k8s-lab
+
+
 /k8s-lab/scripts/cluster/reset-control-plane.sh
 
 sudo kubeadm join k8s-api.lab:6443 \

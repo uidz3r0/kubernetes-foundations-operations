@@ -141,6 +141,9 @@ sudo ctr run...
 
 Create a stable controlPlaneEndpoint.
 
+- Add entry to /etc/hosts
+- Install `kube-vip` Static Pod -- this adds IP addr to system network interface
+
 ---
 
 ## Lab 2
@@ -151,6 +154,8 @@ Reinitialize kubeadm using:
 --control-plane-endpoint
 --upload-certs
 ```
+
+- verify : kubectl get nodes
 
 ---
 
@@ -173,6 +178,8 @@ sudo kubeadm join k8s-api.lab:6443 --token nk6llp.f5vcln35obdcyjrs \
 
 Verify stacked etcd.
 
+- `kubectl get pods -n kube-system | grep etcd`
+
 ---
 
 ## Lab 5
@@ -184,6 +191,8 @@ Understand etcd quorum.
 ## Lab 6
 
 Simulate control plane failures.
+
+- systemctl stop kubelet
 
 ---
 
@@ -237,3 +246,61 @@ This is what external users use to access your applications.
 - Verify stacked etcd
 - Explain quorum
 - Simulate control-plane failure
+
+---
+
+## Kubeconfig details
+
+```bash
+export KUBECONFIG=/path/to/my/secure/config.yaml
+kubectl get pods
+unset KUBECONFIG
+
+# Managing KUBECONFIG
+kubectl config view
+kubectl config get-contexts
+kubectl config current-context
+kubectl config use-context <context-name>
+kubectl config use-context arn:aws:eks:ap-southeast-2:393809387946:cluster/platform-tools-eks
+```
+
+```bash
+# See the server
+cat /etc/kubernetes/admin.conf
+
+kubectl config get-contexts
+
+cp luke:/etc/kubernetes/admin.conf laptop:~/.kube/luke-ha.conf
+cp han:/etc/kubernetes/admin.conf laptop:~/.kube/han-ha.conf
+
+# Merge
+KUBECONFIG=$HOME/.kube/config:$HOME/.kube/luke-ha.conf \
+kubectl config view --flatten > /tmp/config
+
+mv /tmp/config ~/.kube/config
+
+# Show
+kubectl config get-contexts 
+   CURRENT   NAME                          CLUSTER      AUTHINFO           NAMESPACE
+   *         kind-w6d7                     kind-w6d7    kind-w6d7          
+             kubernetes-admin@kubernetes   kubernetes   kubernetes-admin   
+
+# Rename
+kubectl config rename-context \
+  kubernetes-admin@kubernetes \
+  kubeadm-ha
+
+$ kubectl config get-contexts
+   CURRENT   NAME         CLUSTER      AUTHINFO           NAMESPACE
+   *         kind-w6d7    kind-w6d7    kind-w6d7          
+             kubeadm-ha   kubernetes   kubernetes-admin   
+
+kubectl config rename-context kubeadm-ha homelab-ha
+kubectl config rename-cluster kubernetes homelab
+
+kubectl config view --minify
+kubectl config view --minify -o jsonpath='{.clusters[0].cluster.server}'
+
+systemctl is-active containerd
+systemctl is-active kubelet     (watches /etc/kubernetes/manifest; crictl ps)
+```

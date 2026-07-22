@@ -73,6 +73,8 @@ Learn:
 Learn:
 
 - Multi-control-plane architecture
+- kube-vip
+- Virtual IP (VIP)
 - Control Plane Endpoint
 - Certificate key
 - Joining additional control plane nodes
@@ -95,22 +97,19 @@ Learn:
 
 ---
 
-## W7D7 — High Availability and Cluster Maintenance
-
-(VIP, kube-vip, drain, failover)
+## W7D7 — Operations & Maintenance
 
 Learn:
 
-- kube-vip
-- Virtual IP (VIP)
-- Control plane endpoint
+- HA verification 
+- kube-vip failover verification
 - cordon
 - drain
 - uncordon
 - Rolling node maintenance
-- Control plane failover
+- Control plane maintenance
 - Worker maintenance
-
+- Cluster health verification
 
 ---
 
@@ -124,12 +123,15 @@ Learn:
 - Certificate renewal
 - kubeadm upgrade plan
 - kubeadm upgrade apply
+- Control plane upgrades
+- Worker node upgrades
 - kubelet upgrades
 - kubectl upgrades
+- Version skew policy
 - Cluster version verification
-- Control plane troubleshooting
-- Worker node troubleshooting
-- Common kubeadm issues
+- Upgrade verification
+- Rollback considerations
+- Post-upgrade health checks
 
 ---
 
@@ -178,10 +180,10 @@ W7D5  High Availability
 W7D6  Backup & Recovery
           │
           ▼
-W7D7  Cluster Maintenance & Upgrades
+W7D7  Operations & Maintenance
           │
           ▼
-W7D8  Certificates & Troubleshooting
+W7D8  Upgrades, Certificates & Troubleshooting
 ```
 
 ---
@@ -200,3 +202,63 @@ ExternalDNS
 ```
 
 Those belong to Phase 2 (Platform Engineering). Keeping Week 7 focused on core cluster administration with kubeadm preserves a clean separation between becoming a Kubernetes administrator (Phase 1) and building a production platform (Phase 2).
+
+---
+
+## Visual Comparison
+
+- The API server isn't started by `systemd`; it's started by the `kubelet`.
+
+```text
+                 Control Plane
+               ------------------
+
+systemd
+--------
+containerd
+kubelet
+
+kubelet watches
+---------------
+/etc/kubernetes/manifests
+
+Static Pods
+-----------
+kube-apiserver
+kube-controller-manager
+kube-scheduler
+etcd
+kube-vip
+
+DaemonSets
+----------
+kube-proxy
+calico-node
+```
+
+```text
+                    Worker
+               ------------------
+
+systemd
+--------
+containerd
+kubelet
+
+Static Pods
+-----------
+(none)
+
+DaemonSets
+----------
+kube-proxy
+calico-node
+
+Workloads
+---------
+Deployments
+StatefulSets
+DaemonSets
+Jobs
+CronJobs
+```

@@ -29,8 +29,8 @@ Gives:
 
 Then you can join any number of worker nodes by running the following on each as root:
 
-kubeadm join k8s-api.lab:6443 --token nk6llp.f5vcln35obdcyjrs \
-	--discovery-token-ca-cert-hash sha256:7951cb8946dbacfccb2659c7ad5662d567d2be84c3aeee8c8fc276399869768c 
+kubeadm join k8s-api.lab:6443 --token dfa0i2.af4cy1nhe12rmty5 \
+	--discovery-token-ca-cert-hash sha256:990784e53aaff966b2fa6a0a2c1d1ca1b44af3b15bb5118e841df6f651fd5c53    
 ```
 
 Observe:

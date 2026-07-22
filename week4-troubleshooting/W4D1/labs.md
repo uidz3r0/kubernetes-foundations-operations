@@ -262,6 +262,7 @@ Only then:
 
 ```bash
 k edit pod <pod>
+k replace --force -f ...
 ```
 
 or 

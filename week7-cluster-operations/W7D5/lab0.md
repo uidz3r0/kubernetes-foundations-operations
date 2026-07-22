@@ -62,6 +62,9 @@ curl -sL https://api.github.com/repos/kube-vip/kube-vip/releases | jq -r ".[0].n
     v1.2.1
 
 sudo ctr image pull ghcr.io/kube-vip/kube-vip:v1.2.1
+
+ping k8s-api.lab
+ip addr show wlp2s0 | grep 10.1.1.15
 ```
 
 (Replace the version with the latest stable release.)
