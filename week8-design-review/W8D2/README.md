@@ -101,3 +101,11 @@ I intentionally kept them realistic but not overly complex:
 - ingress.yaml introduces host-based routing and TLS without controller-specific annotations.
 - networkpolicy.yaml implements a basic zero-trust model by allowing traffic only from the ingress controller namespace.
 - pvc.yaml demonstrates dynamic provisioning with a StorageClass.
+
+These same manifests can be revisited in later weeks when you study:
+
+- Week 6: Security (expand securityContext and NetworkPolicy)
+- Week 7: Operations (rolling updates, maintenance, troubleshooting)
+- Phase 2: Helm, GitOps, Kustomize, and policy-as-code
+
+This reuse reinforces why each field exists instead of treating the manifests as one-off examples.

@@ -254,6 +254,7 @@ sudo firewall-cmd --permanent --add-port=2379-2380/tcp
 sudo firewall-cmd --permanent --add-port=10250/tcp
 sudo firewall-cmd --permanent --add-port=10257/tcp
 sudo firewall-cmd --permanent --add-port=10259/tcp
+sudo firewall-cmd --permanent --add-port=179/tcp
 sudo firewall-cmd --reload
 ```
 
@@ -264,5 +265,65 @@ sudo firewall-cmd --reload
 | **10250/TCP**     | kubelet API                           | ✅ Required                 |
 | **10257/TCP**     | kube-controller-manager (secure port) | ✅ Modern Kubernetes        |
 | **10259/TCP**     | kube-scheduler (secure port)          | ✅ Modern Kubernetes        |
+| **179/TCP**       | Calico BGP peering                    | ✅ if using Calico in BGP mode |
 
 - You'll notice its 10257 and 10259 instead of 10251 and 10252. In current Kubernetes releases, the insecure ports 10251 and 10252 are no longer used by default
+
+```bash
+# Port 179 was not open in luke before thus the current was only 3
+# Check all calico pods desired versus current
+$ kubectl get ds calico-node -n kube-system
+NAME          DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR            AGE
+calico-node   4         3         4       4            4           kubernetes.io/os=linux   9d
+
+$ $ kg pods -n kube-system | grep calico
+calico-kube-controllers-5766bdd7c-5j89k   1/1     Running   181 (6h57m ago)   7d21h
+calico-node-7mz56                         1/1     Running   2 (9h ago)        9d
+calico-node-cfr99                         1/1     Running   0                 3d18h
+calico-node-hk8gk                         1/1     Running   0                 9d
+calico-node-wstjx                         0/1     Running   0                 9m3s
+
+$ sudo firewall-cmd --permanent --add-port=179/tcp
+$ sudo firewall-cmd --reload
+
+# Whats their names? 
+$ kubectl get pods -n kube-system | grep calico 
+calico-kube-controllers-5766bdd7c-5j89k   1/1     Running   181 (7h20m ago)   7d21h
+calico-node-7mz56                         1/1     Running   2 (9h ago)        9d
+calico-node-cfr99                         1/1     Running   0                 3d18h
+calico-node-hk8gk                         1/1     Running   0                 9d
+calico-node-wstjx                         1/1     Running   0                 32m
+
+# Check the BGP running on that pod
+$ kubectl exec -it -n kube-system calico-node-wstjx -- birdcl show protocols
+Defaulted container "calico-node" out of: calico-node, upgrade-ipam (init), install-cni (init), ebpf-bootstrap (init)
+BIRD v0.3.3+birdv1.6.8 ready.
+name     proto    table    state  since       info
+static1  Static   master   up     07:37:26    
+kernel1  Kernel   master   up     07:37:26    
+device1  Device   master   up     07:37:26    
+direct1  Direct   master   up     07:37:26    
+Mesh_10_1_1_11 BGP      master   up     07:58:43    Established   
+Mesh_10_1_1_12 BGP      master   up     08:07:04    Established   
+Mesh_10_1_1_14 BGP      master   up     07:58:43    Established   
+
+$ kubectl exec -it -n kube-system calico-node-wstjx -- ls /usr/sbin | grep bird
+Defaulted container "calico-node" out of: calico-node, upgrade-ipam (init), install-cni (init), ebpf-bootstrap (init)
+
+$ firewall-cmd --list-all
+public (active)
+  target: default
+  icmp-block-inversion: no
+  interfaces: wlp2s0
+  sources: 
+  services: cockpit dhcpv6-client ssh
+  ports: 6443/tcp 2379-2380/tcp 10250/tcp 10257/tcp 10259/tcp 179/tcp
+  protocols: 
+  forward: yes
+  masquerade: no
+  forward-ports: 
+  source-ports: 
+  icmp-blocks: 
+  rich rules: 
+
+```
