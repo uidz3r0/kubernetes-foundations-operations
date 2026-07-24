@@ -304,3 +304,365 @@ kubectl config view --minify -o jsonpath='{.clusters[0].cluster.server}'
 systemctl is-active containerd
 systemctl is-active kubelet     (watches /etc/kubernetes/manifest; crictl ps)
 ```
+
+---
+
+## 🔄 The Standard Maintenance Steps
+
+```text
+    Applications Running
+            │
+            ▼
+     1. kubectl cordon <node>           (Stop new Pods from being scheduled)
+            │
+            ▼
+     2. kubectl drain <node>            (Evict existing Pods gracefully)
+            │
+            ▼
+     3. Perform OS / Package Updates    (Apply patches, CRI/Kubelet upgrades, reboot)
+            │
+            ▼
+     4. Verify Node & Service Health    (Ensure kubelet/containerd are Ready)
+            │
+            ▼
+     5. kubectl uncordon <node>         (Allow Scheduler to place Pods again)
+```
+
+### ❌ 1. Cordon (The Pause Button)
+
+```bash
+sudo kubectl cordon <node-name>
+kubectl cordon leia
+```
+
+- Effect: Sets the node status to `Ready,SchedulingDisabled`. New Pods will not be scheduled here.
+
+
+### 📦 2. Drain (The Evacuator)
+
+```bash
+sudo kubectl drain <node-name> --ignore-daemonsets --delete-emptydir-data --force
+
+# remove taint from han to be schedulable for leia
+kubectl taint nodes han node-role.kubernetes.io/control-plane-
+
+# Drain leia
+kubectl drain leia --ignore-daemonsets --delete-emptydir-data --force
+```
+
+- Effect: **Evicts existing pods** from the node to other nodes in the cluster.
+  - It respects `PodDisruptionBudgets (PDBs)` to prevent taking down too much at once.
+
+- Key Flags:
+  - `--ignore-daemonsets`: DaemonSet pods run on all nodes, so you must include this flag to evict them (they will be recreated on other nodes after the upgrade).
+  - `--delete-emptydir-data`: WARNING: This allows evicting pods that use `emptyDir` volumes. This data is lost when the pod is evicted.
+  - `--force`: Use with caution. This allows evicting pods that are not managed by a controller (e.g., manually created pods) or pods that have `PodDisruptionBudgets` that would block the eviction.
+
+### 🔧 3. OS / Package Updates
+
+```text
+Includes kernel patches, CRI updates (containerd), and kubelet upgrades.
+
+leia:
+   sudo apt update && sudo apt upgrade -y
+han:
+   sudo apt update && sudo apt upgrade -y
+luke:
+   sudo dnf update -y && sudo reboot
+
+# Check Registry for Current Version (current 1.34.9-150500.1.1)
+leia: 
+   sudo apt-cache policy kubeadm
+   sudo apt-cache policy kubelet
+
+han: 
+   sudo apt-cache policy kubeadm
+   sudo apt-cache policy kubelet
+
+luke: 
+   sudo dnf list kubeadm
+   sudo dnf list kubelet
+
+```
+
+### ✅ 4. Verify Node & Service Health
+
+```text
+Ensure kubelet/containerd are Ready
+
+leia: 
+   sudo systemctl status kubelet
+   sudo systemctl status containerd
+
+han:
+   sudo systemctl status kubelet
+   sudo systemctl status containerd
+   kubectl get nodes -o wide
+
+luke:
+   sudo systemctl status kubelet
+   sudo systemctl status containerd
+   kubectl get nodes -o wide
+```
+
+### 🚀 5. Uncordon
+
+```text
+Allow Scheduler to place Pods again
+
+leia:
+   sudo kubectl uncordon leia
+
+han:
+   sudo kubectl uncordon leia
+
+luke:
+   sudo kubectl uncordon leia
+```
+
+- Normally we leave the pods where and will move and reschedule the pods to other nodes when the node is being removed (e.g. decomissioning). 
+
+---
+
+## Versions
+
+When the Kubernetes documentation refers to a Version Skew, it is almost always talking about Minor Version Skew.
+
+1.34.9 = Major.Minor.Patch
+1.34.9-150500.1.1 = Major.Minor.Patch-Distribution.Minor.Patch
+
+- Supported Minor Skew: Moving from 1.34 to 1.35 is a 1-minor version skew. This is perfectly legal and supported.
+- Unsupported Minor Skew: Moving from 1.34 to 1.36 is not supported. This creates 2-minor version gap between control plane nodes. 
+
+```bash
+# k get nodes -o wide
+NAME    STATUS   ROLES           AGE     VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE                      KERNEL-VERSION                 CONTAINER-RUNTIME
+han     Ready    control-plane   9d      v1.34.9   10.1.1.11     <none>        Ubuntu 24.04.4 LTS            6.8.0-136-generic              containerd://2.2.1
+leia    Ready    <none>          9d      v1.34.9   10.1.1.12     <none>        Ubuntu 24.04.4 LTS            6.17.0-35-generic              containerd://2.2.1
+luke    Ready    control-plane   9d      v1.34.9   10.1.1.10     <none>        Rocky Linux 9.8 (Blue Onyx)   5.14.0-687.17.1.el9_8.x86_64   containerd://2.2.5
+padme   Ready    control-plane   4d14h   v1.34.9   10.1.1.14     <none>        Ubuntu 24.04.4 LTS            6.8.0-136-generic              containerd://2.2.1
+```
+
+Bring all control-plane and worker nodes up to 1.35.9 first before upgrading to 1.36. Otherwise the cluster will lose quorum and control-plane will crash. 
+
+## For Cloud Platforms like AWS EKS, it's much simpler to do this: 
+
+**Option 1 - Let EKS manage it for you (Recommended for non-production or test clusters):**
+
+```bash
+# See what versions are available
+aws eks list-updates --name my-eks-cluster --region ap-southeast-2
+
+# Upgrade control plane
+aws eks update-cluster-version \
+    --name my-eks-cluster \
+    --kubernetes-version 1.35 \
+    --region ap-southeast-2
+
+# Watch the magic happen
+kubectl get nodes
+```
+
+**Option 2 - eksctl (If you used eksctl to create the cluster):**
+
+```bash
+# Upgrade worker nodes
+eksctl upgrade nodegroup \
+    --cluster my-eks-cluster \
+    --name my-nodegroup \
+    --kubernetes-version 1.35 \
+    --region ap-southeast-2
+```
+
+If using terraform, you can upgrade the cluster by updating the kubernetes_version attribute in the aws_eks_cluster resource and running terraform apply.
+
+Worker nodes use an automated strategy called:
+
+```text
+Rolling Update Strategy
+   1. Identify a node to upgrade.
+   2. Drain the node (cordon + evict).
+   3. Upgrade the kubelet/OS.
+   4. Uncordon the node.
+   5. Move to the next node.
+```
+
+**Option 3 - EKS Self-Managed Nodes:**
+
+If you are using EC2 instances directly (not managed node groups), you must perform the rolling update manually.
+
+## For Rancher
+
+If you used the Cluster API (CAPI) to create the cluster, you can upgrade the cluster by updating the kubernetes_version attribute in the Cluster object and running a terraform apply.
+
+```yaml
+# In Cluster.yaml
+apiVersion: cluster.x-k8s.io/v1beta1
+spec:
+  kubernetesVersion: v1.35.9
+```
+
+## For kubeadm
+
+From: 1.34.9 To: 1.35.7    ✅ Done Jul 24, 2026
+From: 1.35.7 To: 1.36.3 
+
+### Upgrade Sequence & Rules
+1. **Control Planes First:** Upgrade control plane nodes one by one (`han` $\rightarrow$ `padme` $\rightarrow$ `luke`).
+2. **Workers Last:** Upgrade worker nodes only after all control planes are upgraded (`leia`).
+3. **`kubeadm upgrade apply` vs `node`:**
+   * Run `sudo kubeadm upgrade apply v1.35.9` **ONLY** on the **first** control plane (`han`).
+   * Run `sudo kubeadm upgrade node` on all **subsequent** control planes (`padme`, `luke`) and workers (`leia`).
+4. **Package Unholding & Repos (`pkgs.k8s.io`):**
+   * Debian/Ubuntu package versions on `pkgs.k8s.io` use the **`-1.1`** suffix (e.g., `1.35.9-1.1`), NOT the old `-00` suffix.
+   * Run `apt-cache policy kubeadm` to check exact available version strings in your repo.
+   * **Ubuntu/Debian (`han`, `padme`, `leia`):** Use `sudo apt-mark unhold` before installing and `sudo apt-mark hold` after.
+   * **Rocky Linux (`luke`):** Use `sudo dnf install --disableexcludes=kubernetes`.
+
+---
+
+### STEP 1: Upgrade First Control Plane (`han` — Ubuntu)
+```bash
+kubectl cordon han
+kubectl drain han --ignore-daemonsets --delete-emptydir-data --force
+
+# Update APT repo to v1.35 in /etc/apt/sources.list.d/kubernetes.list:
+# deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.35/deb/ /
+
+cat <<EOF | sudo tee /etc/apt/sources.list.d/kubernetes.list
+deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.35/deb/ /
+EOF
+
+kubeadm upgrade plan
+
+sudo apt-mark unhold kubeadm
+sudo apt-get update
+# Check exact package version string: apt-cache policy kubeadm
+sudo apt-get install -y kubeadm=1.35.7-1.1
+sudo apt-mark hold kubeadm 
+
+# FIRST CONTROL PLANE ONLY:
+sudo kubeadm upgrade apply v1.35.7 -y
+
+sudo apt-mark unhold kubelet kubectl
+sudo apt-get install -y kubelet=1.35.7-1.1 kubectl=1.35.7-1.1
+sudo apt-mark hold kubelet kubectl
+
+sudo systemctl daemon-reload && sudo systemctl restart kubelet
+kubectl uncordon han
+```
+
+### STEP 2: Upgrade Secondary Control Plane (`padme` — Ubuntu)
+```bash
+kubectl cordon padme
+kubectl drain padme --ignore-daemonsets --delete-emptydir-data --force
+
+# Update APT repo to v1.35 in /etc/apt/sources.list.d/kubernetes.list
+cat <<EOF | sudo tee /etc/apt/sources.list.d/kubernetes.list
+deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.35/deb/ /
+EOF
+
+sudo apt-mark unhold kubeadm
+sudo apt-get update
+sudo apt-get install -y kubeadm=1.35.7-1.1
+sudo apt-mark hold kubeadm
+
+# SECONDARY CONTROL PLANE: kubeadm upgrade node (NOT apply!)
+sudo kubeadm upgrade node
+
+sudo apt-mark unhold kubelet kubectl
+sudo apt-get install -y kubelet=1.35.7-1.1 kubectl=1.35.7-1.1
+sudo apt-mark hold kubelet kubectl
+
+sudo systemctl daemon-reload && sudo systemctl restart kubelet
+kubectl uncordon padme
+```
+
+### STEP 3: Upgrade Secondary Control Plane (`luke` — Rocky Linux)
+```bash
+kubectl cordon luke
+kubectl drain luke --ignore-daemonsets --delete-emptydir-data --force
+
+# update the Repositories
+cat <<EOF | sudo tee /etc/yum.repos.d/kubernetes.repo
+[kubernetes]
+name=Kubernetes
+baseurl=https://pkgs.k8s.io/core:/stable:/v1.35/rpm/
+enabled=1
+gpgcheck=1
+gpgkey=https://pkgs.k8s.io/core:/stable:/v1.35/rpm/repodata/repomd.xml.key
+EOF
+
+sudo dnf makecache
+
+# Unlock versionlock if locked
+sudo dnf versionlock delete kubeadm kubelet kubectl 2>/dev/null || true
+
+# Upgrade kubeadm (check available version: sudo dnf list --showduplicates kubeadm)
+sudo dnf install -y kubeadm-1.35.7-150500.1.1 --disableexcludes=kubernetes
+
+# SECONDARY CONTROL PLANE: kubeadm upgrade node
+sudo kubeadm upgrade node
+
+# Upgrade kubelet and kubectl
+sudo dnf install -y kubelet-1.35.7-150500.1.1 kubectl-1.35.7-150500.1.1 --disableexcludes=kubernetes
+
+sudo systemctl daemon-reload && sudo systemctl restart kubelet
+kubectl uncordon luke
+```
+
+### STEP 4: Upgrade Worker Node (`leia` — Ubuntu)
+```bash
+kubectl cordon leia
+kubectl drain leia --ignore-daemonsets --delete-emptydir-data --force
+
+# Update APT repo to v1.35 in /etc/apt/sources.list.d/kubernetes.list
+cat <<EOF | sudo tee /etc/apt/sources.list.d/kubernetes.list
+deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.35/deb/ /
+EOF
+
+sudo apt-mark unhold kubeadm kubelet kubectl
+sudo apt-get update
+sudo apt-get install -y kubeadm=1.35.7-1.1 kubelet=1.35.7-1.1 kubectl=1.35.7-1.1
+sudo apt-mark hold kubeadm kubelet kubectl
+
+# WORKER NODE: kubeadm upgrade node
+sudo kubeadm upgrade node
+
+sudo systemctl daemon-reload && sudo systemctl restart kubelet
+kubectl uncordon leia
+
+# Verify the cluster is healthy
+kg componentstatuses
+
+k cluster-info
+k get --raw='/readyz?verbose'
+
+# Quick smoke test
+k create deployment nginx --image=nginx
+k expose deployment nginx --port=80
+k get pods
+k get svc
+k delete deployment nginx
+k delete svc nginx   
+```
+
+etcd backup
+```text
+etcdctl snapshot save /k8s-lab/backups/etcd-$(date +%F-%H-%M).db \
+  --endpoints=https://127.0.0.1:2379 \
+  --cacert=/etc/kubernetes/pki/etcd/ca.crt \
+  --cert=/etc/kubernetes/pki/etcd/server.crt \
+  --key=/etc/kubernetes/pki/etcd/server.key
+
+# Copy to a safe location (your laptop, etc)
+scp padme:~/backup-*.db .
+```
+
+# What Happens During Upgrade
+1. **Cordon** - Node is marked unschedulable.
+2. **Evict** - Running pods are gracefully terminated and rescheduled to healthy nodes.
+3. **Upgrade Kubelet** - The node agent is upgraded.
+4. **Uncordon** - Node is marked schedulable again.
+
+

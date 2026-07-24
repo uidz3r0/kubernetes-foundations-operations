@@ -664,28 +664,28 @@ Topics include:
 
 ### HLD
 
-* [ ] Components
-* [ ] Traffic flow
-* [ ] High availability
-* [ ] Failure domains
-* [ ] Security boundaries
+* [x] Components
+* [x] Traffic flow
+* [x] High availability
+* [x] Failure domains
+* [x] Security boundaries
 
 ### LLD
 
-* [ ] YAML resource decisions
-* [ ] Probes
-* [ ] Autoscaling
-* [ ] Affinity
-* [ ] Network policies
-* [ ] Implementation specifics
+* [x] YAML resource decisions
+* [x] Probes
+* [x] Autoscaling
+* [x] Affinity
+* [x] Network policies
+* [x] Implementation specifics
 
 ### Final Review
 
-* [ ] YAML writing
-* [ ] Troubleshooting review
-* [ ] Workload debugging
-* [ ] Networking review
-* [ ] Storage review
+* [x] YAML writing
+* [x] Troubleshooting review
+* [x] Workload debugging
+* [x] Networking review
+* [x] Storage review
 
 ## Goal
 

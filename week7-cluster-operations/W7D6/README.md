@@ -160,13 +160,13 @@ command -v etcdctl
 
 # Check the server version:
 kubectl -n kube-system describe pod etcd-$(hostname) | grep Image:
-    Image:         registry.k8s.io/etcd:3.6.5-0
+    Image:         registry.k8s.io/etcd:3.6.6-0
 ```
 
 ### Then download that version (run on all `control-plane`):
 
 ```bash
-ETCD_VERSION=v3.6.5
+ETCD_VERSION=v3.6.6
 
 wget https://github.com/etcd-io/etcd/releases/download/${ETCD_VERSION}/etcd-${ETCD_VERSION}-linux-amd64.tar.gz
 
