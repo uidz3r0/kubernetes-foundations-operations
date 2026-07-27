@@ -117,6 +117,27 @@ The goal is simply:
 
 ---
 
+```bash
+# han: (sda3) / partiton is currently just 100G, just use all
+# 1- Resize the Partition: Use parted to ensure partition sda3 occupies the entire disk
+sudo parted /dev/sda resizepart 3 100%
+
+# 2- Resize the Physical Volume: Inform LVM that the physical partition has grown
+sudo pvresize /dev/sda3
+
+# 3- Extend the Logical Volume: Allocate all free space in the Volume Group to your root logical volume
+sudo lvextend -l +100%FREE /dev/mapper/ubuntu--vg-ubuntu--lv   
+
+# 4- Resize the Filesystem: Expand the ext4 filesystem to fill the new logical volume size.
+sudo resize2fs /dev/mapper/ubuntu--vg-ubuntu--lv   
+
+# Verify: Run df -h to confirm / now shows ~1.8TB. 
+df -kh
+mkdir /opt/data
+```
+
+---
+
 A possible evolution of this home lab is to build a simulated Internal Developer Platform (IDP):
 
 ### Core Concepts
@@ -403,3 +424,230 @@ sudo ctr run --rm --net-host \
 
 kubectl get pods -n kube-system | grep vip  
 ```
+
+---
+
+## Change of Plans
+
+- see W7D5 for Version updates
+
+### From 
+
+| Node | Role | OS | Hardware | CPU | Memory | Disk | 
+|------|------|-----|----------|-----|--------|------|
+| **luke.lab** | Control Plane #1 | Rocky Linux 9.8 | Intel NUC, i5 2.7GHz | 4 | 16 GB | 230 GB |
+| **han.lab** | Control Plane #2 | Ubuntu 24.04 | Old Tower, AMD 3.7GHz | 4 | 8 GB | 2 TB | 
+| **padme.lab** | Control Plane #3 | Ubuntu 24.04 | Intel NUC, i5 2.4GHz | 8 | 16 GB | 500 GB |
+| **leia.lab** | Worker | Ubuntu 24.04 | Old Laptop, i5-4200U 1.60GHz | 4 | 4 GB | 1 TB |
+
+### To
+
+| Node | Role | OS | Hardware | CPU | Memory | Disk | 
+|------|------|-----|----------|-----|--------|------|
+| **leia.lab** | Control Plane #3 | Ubuntu 24.04 | Old Laptop, i5-4200U 1.60GHz | 4 | 4 GB | 1 TB |
+| **padme.lab** | Worker | Ubuntu 24.04 | Intel NUC, i5 2.4GHz | 8 | 16 GB | 500 GB |
+
+---
+
+## For PADME, convert from control-plane to worker (see W7D4)
+
+- cordon/drain = safe maintenance prep
+- reset/demote + rejoin = role change (for PADME/LEIA's case)
+
+```bash
+# Firewall is inactive for Ubuntu
+ufw status
+
+# Execute from luke or han
+kubectl cordon padme
+kubectl drain padme --ignore-daemonsets --delete-emptydir-data
+kubectl delete node padme
+
+# check health on han and luke; expect  "https://127.0.0.1:2379 is healthy"
+sudo ETCDCTL_API=3 etcdctl \
+  --endpoints=https://127.0.0.1:2379 \
+  --cert=/etc/kubernetes/pki/etcd/server.crt \
+  --key=/etc/kubernetes/pki/etcd/server.key \
+  --cacert=/etc/kubernetes/pki/etcd/ca.crt \
+  endpoint health
+
+# on PADME, full reset:
+kubeadm reset -f
+systemctl stop kubelet
+rm -rf /etc/kubernetes/manifests/*
+rm -rf /var/lib/etcd
+rm -rf /var/lib/kubelet/*
+rm -rf /etc/cni/net.d
+systemctl start kubelet
+
+# This removes the node’s control-plane components and local kubelet state.
+# Then run in luke, worker dont need certificate
+kubeadm token create --print-join-command
+
+# Now back to padme, reconfigure as worker, 
+kubeadm join <cp-ip>:6443 --token <token> \
+  --discovery-token-ca-cert-hash sha256:<hash>
+
+# OPTIONAL: Check
+containerd --version
+kubelet --version
+kubeadm version
+kubectl version --client
+runc --version 
+
+# use crictl for troubleshooting
+crictl --version
+kube-vip
+
+sudo rm -rf ~/.kube
+
+# use CNI plugin (like Calico, Cilium, or Flannel). Calico is recommended for "network policy capabilities" 
+# Without it, pods cannot communicate, and nodes will remain `NotReady`.
+# You apply the Calico `DaemonSet` manifest once to the cluster (usually on the control-plane).
+sh scripts/install-calico.sh
+```
+
+### Check this kubeadm-scripts
+
+`git clone https://github.com/techiescamp/kubeadm-scripts`
+
+---
+
+## For LEIA, convert from worker to control-plane (see W7D4)
+
+```bash
+# Install the CRI troubleshooting tool
+/k8s-lab/scripts/setup/install-crictl.sh
+
+# Execute from luke or han
+kubectl cordon leia
+kubectl drain leia --ignore-daemonsets --delete-emptydir-data
+kubectl delete node leia
+
+# full reset
+sudo kubeadm reset -f
+systemctl stop kubelet
+sudo rm -rf /etc/kubernetes /var/lib/etcd /var/lib/kubelet /var/lib/cni /etc/cni/net.d
+sudo systemctl restart containerd kubelet
+
+
+# Then run in luke or han whereever the VIP is, control-plane requires certificate key
+kubeadm token create --print-join-command \
+  --certificate-key $(kubeadm init phase upload-certs --upload-certs | tail -n 1)
+
+# Now back to leia, reconfigure as control-plane, 
+kubeadm join <cp-ip>:6443 --token <token> \
+  --discovery-token-ca-cert-hash sha256:<hash> \
+  --control-plane \
+  --certificate-key <key>
+
+
+# Check leia can connect
+nc -vz 10.1.1.15 6443
+nc -vz 10.1.1.10 2379
+nc -vz 10.1.1.10 2380
+curl -k https://10.1.1.15:6443/readyz
+
+# 
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+```
+
+```bash
+# kube-vip setup found W7D5/lab0.md
+
+# Identify latest stable version
+curl -sL https://api.github.com/repos/kube-vip/kube-vip/releases | jq -r ".[0].name"
+    v1.2.1
+
+     sudo ctr image pull ghcr.io/kube-vip/kube-vip:v1.2.1
+
+     ping k8s-api.lab
+     ip addr show wlp3s0 | grep 10.1.1.15
+
+     kubectl get pods -n kube-system | grep vip
+
+# generate the static pods
+ip addr show
+
+export INTERFACE=wlp3s0
+export VIP=10.1.1.15
+VERSION=v1.2.1
+
+sudo ctr run --rm --net-host \
+  ghcr.io/kube-vip/kube-vip:${VERSION} \
+  vip \
+  /kube-vip manifest pod \
+    --interface ${INTERFACE} \
+    --address ${VIP} \
+    --controlplane \
+    --services \
+    --arp \
+    --leaderElection \
+  | sudo tee /etc/kubernetes/manifests/kube-vip.yaml      
+
+kubectl get pods -n kube-system | grep vip  
+```
+
+---
+
+## Issues
+
+```bash
+
+# ISSUE: Stale membership, etcd still thinks padme is control-plane
+han:~# sudo etcdctl \
+  --endpoints=https://127.0.0.1:2379 \
+  --cacert=/etc/kubernetes/pki/etcd/ca.crt \
+  --cert=/etc/kubernetes/pki/etcd/peer.crt \
+  --key=/etc/kubernetes/pki/etcd/peer.key \
+  member list
+
+  Output:
+
+     28d11f179153848, started, han, https://10.1.1.11:2380, https://10.1.1.11:2379, false
+     7776008a92ec9519, started, padme, https://10.1.1.14:2380, https://10.1.1.14:2379, false
+     a6a292fe93a0085d, started, luke, https://10.1.1.10:2380, https://10.1.1.10:2379, false
+
+# So verify, cluster health first
+sudo etcdctl \
+  --endpoints=https://127.0.0.1:2379 \
+  --cacert=/etc/kubernetes/pki/etcd/ca.crt \
+  --cert=/etc/kubernetes/pki/etcd/peer.crt \
+  --key=/etc/kubernetes/pki/etcd/peer.key \
+  endpoint health --cluster
+
+  Output:
+
+     {"level":"warn","ts":"2026-07-26T19:08:04.528474+1000","logger":"client","caller":"v3@v3.6.5/retry_interceptor.go:65","msg":"retrying of unary invoker failed","target":"etcd-endpoints://0xc0002f85a0/10.1.1.14:2379","method":"/etcdserverpb.KV/Range","attempt":0,"error":"rpc error: code = DeadlineExceeded desc = latest balancer error: connection error: desc = \"transport: Error while dialing: dial tcp 10.1.1.14:2379: connect: connection refused\""}
+     https://10.1.1.11:2379 is healthy: successfully committed proposal: took = 14.347273ms
+     https://10.1.1.10:2379 is healthy: successfully committed proposal: took = 56.905557ms
+     https://10.1.1.14:2379 is unhealthy: failed to commit proposal: context deadline exceeded
+     Error: unhealthy cluster
+
+## Why this happened
+- When you demoted padme from a control plane to a worker, kubeadm reset removed the local etcd instance from padme, but it does not automatically remove the member from the existing etcd cluster.
+- You have to remove the old etcd member manually.
+
+# Remove the stale member: 7776008a92ec9519
+sudo etcdctl \
+  --endpoints=https://127.0.0.1:2379 \
+  --cacert=/etc/kubernetes/pki/etcd/ca.crt \
+  --cert=/etc/kubernetes/pki/etcd/peer.crt \
+  --key=/etc/kubernetes/pki/etcd/peer.key \
+  member remove 7776008a92ec9519
+
+# then Verify
+sudo etcdctl \
+  --endpoints=https://127.0.0.1:2379 \
+  --cacert=/etc/kubernetes/pki/etcd/ca.crt \
+  --cert=/etc/kubernetes/pki/etcd/peer.crt \
+  --key=/etc/kubernetes/pki/etcd/peer.key \
+  member list
+
+  Output
+
+  28d11f179153848, started, han, https://10.1.1.11:2380, https://10.1.1.11:2379, false
+  a6a292fe93a0085d, started, luke, https://10.1.1.10:2380, https://10.1.1.10:2379, false
+  

@@ -346,6 +346,9 @@ sudo kubectl drain <node-name> --ignore-daemonsets --delete-emptydir-data --forc
 # remove taint from han to be schedulable for leia
 kubectl taint nodes han node-role.kubernetes.io/control-plane-
 
+# put it back
+kubectl taint nodes han node-role.kubernetes.io/control-plane:NoSchedule
+
 # Drain leia
 kubectl drain leia --ignore-daemonsets --delete-emptydir-data --force
 ```
@@ -665,4 +668,28 @@ scp padme:~/backup-*.db .
 3. **Upgrade Kubelet** - The node agent is upgraded.
 4. **Uncordon** - Node is marked schedulable again.
 
+---
 
+## Change of Plans 
+
+(see W0D1 on implementation)
+
+### From 
+
+| Node | Role | OS | Hardware | CPU | Memory | Disk | 
+|------|------|-----|----------|-----|--------|------|
+| **luke.lab** | Control Plane #1 | Rocky Linux 9.8 | Intel NUC, i5 2.7GHz | 4 | 16 GB | 230 GB |
+| **han.lab** | Control Plane #2 | Ubuntu 24.04 | Old Tower, AMD 3.7GHz | 4 | 8 GB | 2 TB | 
+| **padme.lab** | Control Plane #3 | Ubuntu 24.04 | Intel NUC, i5 2.4GHz | 8 | 16 GB | 500 GB |
+| **leia.lab** | Worker | Ubuntu 24.04 | Old Laptop, i5-4200U 1.60GHz | 4 | 4 GB | 1 TB |
+
+### To
+
+| Node | Role | OS | Hardware | CPU | Memory | Disk | 
+|------|------|-----|----------|-----|--------|------|
+| **leia.lab** | Control Plane #3 | Ubuntu 24.04 | Old Laptop, i5-4200U 1.60GHz | 4 | 4 GB | 1 TB |
+| **padme.lab** | Worker | Ubuntu 24.04 | Intel NUC, i5 2.4GHz | 8 | 16 GB | 500 GB |
+
+Note: 
+
+- `kubeadm reset` cleans up the local node but does not reconfigure the existing etcd cluster for you. You may need to check and remove any stale membership. 

@@ -101,6 +101,7 @@ Rocky
 
 ```
 systemctl status firewalld
+firewall-cmd --list-all
 ```
 
 Ubuntu
